@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{313B4D61-7C1C-4AB6-9170-114DA850ED75}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Exxis.Addon.HojadeRutaAGuia.Domain</RootNamespace>
+    <AssemblyName>Exxis.Addon.HojadeRutaAGuia.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.96.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ClosedXML.0.96.0\lib\net46\ClosedXML.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.16.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DocumentFormat.OpenXml.2.16.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IronXL, Version=2022.3.0.0, Culture=neutral, PublicKeyToken=0f5804b6690bad1e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\IronXL.Excel.2022.3.0\lib\net45\IronXL.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=2021.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JetBrains.Annotations.2021.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="Z.ExtensionMethods.WithNamespace, Version=2.1.1.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Z.ExtensionMethods.WithNamespace.2.1.1\lib\net45\Z.ExtensionMethods.WithNamespace.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AuxiliaryDomain.cs" />
+    <Compile Include="BatchDomain.cs" />
+    <Compile Include="BeetrackDomain.cs" />
+    <Compile Include="Code\BaseDomain.cs" />
+    <Compile Include="Code\IBaseDomain.cs" />
+    <Compile Include="Contracts\IBatchDomain.cs" />
+    <Compile Include="Contracts\IBeetrackDomain.cs" />
+    <Compile Include="Contracts\IEDIDomain.cs" />
+    <Compile Include="Contracts\IItemDomain.cs" />
+    <Compile Include="Contracts\ILiquidacionTarjetasDomain.cs" />
+    <Compile Include="Contracts\ILiquidationTransporterDomain.cs" />
+    <Compile Include="Contracts\IPurchaseOrderDomain.cs" />
+    <Compile Include="Contracts\IReportDomain.cs" />
+    <Compile Include="Contracts\IReturnOrderDomain.cs" />
+    <Compile Include="Contracts\ITransferStockDomain.cs" />
+    <Compile Include="Contracts\ITransporterTariffDomain.cs" />
+    <Compile Include="EDIDomain.cs" />
+    <Compile Include="EDIProcessor\ExcelEDIProcessor.cs" />
+    <Compile Include="EDIStrategy\BaseEDIStrategy.cs" />
+    <Compile Include="EDIStrategy\ExcelEDIStrategy.cs" />
+    <Compile Include="EDIStrategy\Structures\RegisterResume.cs" />
+    <Compile Include="EDIStrategy\Structures\EDIRecord.cs" />
+    <Compile Include="Extractor\QueryExtractor.cs" />
+    <Compile Include="Extractor\QueryParameter.cs" />
+    <Compile Include="ItemDomain.cs" />
+    <Compile Include="LiquidacionTarjetasDomain.cs" />
+    <Compile Include="LiquidationTransporterDomain.cs" />
+    <Compile Include="PurchaseOrderDomain.cs" />
+    <Compile Include="ReportDomain.cs" />
+    <Compile Include="ReturnOrderDomain.cs" />
+    <Compile Include="Contracts\IAuxiliaryDomain.cs" />
+    <Compile Include="Contracts\IDirectionsDomain.cs" />
+    <Compile Include="Contracts\IDocumentMarketingDomain.cs" />
+    <Compile Include="Contracts\IDriverDomain.cs" />
+    <Compile Include="Contracts\IFileDomain.cs" />
+    <Compile Include="Contracts\IInfrastructureDomain.cs" />
+    <Compile Include="Contracts\IMarketingDocumentDomain.cs" />
+    <Compile Include="Contracts\IRouteDomain.cs" />
+    <Compile Include="Contracts\ISaleOrderDomain.cs" />
+    <Compile Include="Contracts\ISettingsDomain.cs" />
+    <Compile Include="Contracts\ITransferOrderDomain.cs" />
+    <Compile Include="Contracts\ITransporterDomain.cs" />
+    <Compile Include="Contracts\IWarehouseDomain.cs" />
+    <Compile Include="DirectionsDomain.cs" />
+    <Compile Include="DriverDomain.cs" />
+    <Compile Include="FilesDomain.cs" />
+    <Compile Include="InfrastructureDomain.cs" />
+    <Compile Include="MarketingDocumentDomain.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteDomain.cs" />
+    <Compile Include="SettingsDomain.cs" />
+    <Compile Include="TransferStockDomain.cs" />
+    <Compile Include="TransporterDomain.cs" />
+    <Compile Include="TransporterTariffDomain.cs" />
+    <Compile Include="WarehouseDomain.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\0. CrossCutting\CrossCutting\Exxis.Addon.HojadeRutaAGuia.CrossCutting.csproj">
+      <Project>{C6F15DDB-3FD5-41B3-B266-E2C7321A1F06}</Project>
+      <Name>Exxis.Addon.HojadeRutaAGuia.CrossCutting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\3. Data\Ventura.Addon.PickingDistribution.Data\Exxis.Addon.HojadeRutaAGuia.Data.csproj">
+      <Project>{5EB4FC73-2742-48EA-8D65-240AA8DA39C9}</Project>
+      <Name>Exxis.Addon.HojadeRutaAGuia.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

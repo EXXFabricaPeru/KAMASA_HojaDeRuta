@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5EB4FC73-2742-48EA-8D65-240AA8DA39C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Exxis.Addon.HojadeRutaAGuia.Data</RootNamespace>
+    <AssemblyName>Exxis.Addon.HojadeRutaAGuia.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="B1SLayer, Version=1.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\B1SLayer.1.3.2\lib\netstandard2.0\B1SLayer.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\..\packages\BouncyCastle.1.8.6.1\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DisposableSAPBO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\4. Library\DisposableSAPBO.dll</HintPath>
+    </Reference>
+    <Reference Include="Flurl, Version=3.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Flurl.3.0.6\lib\net472\Flurl.dll</HintPath>
+    </Reference>
+    <Reference Include="Flurl.Http, Version=3.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Flurl.Http.3.2.4\lib\net472\Flurl.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=2021.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JetBrains.Annotations.2021.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Sap.Data.Hana.v4.5, Version=2.17.22.0, Culture=neutral, PublicKeyToken=0326b8ea63db4bc4, processorArchitecture=MSIL" />
+    <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.9\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VSVersionControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\4. Library\VSVersionControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Z.ExtensionMethods, Version=2.1.1.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Z.ExtensionMethods.2.1.1\lib\net45\Z.ExtensionMethods.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Z.ExtensionMethods.WithNamespace, Version=2.1.1.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Z.ExtensionMethods.WithNamespace.2.1.1\lib\net45\Z.ExtensionMethods.WithNamespace.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Code\BaseUDOExtensions.cs" />
+    <Compile Include="Code\Footer.cs" />
+    <Compile Include="Code\HeaderFooter.cs" />
+    <Compile Include="Code\Repository.cs" />
+    <Compile Include="Code\ResponseTransaction.cs" />
+    <Compile Include="Code\RetrieveFormat.cs" />
+    <Compile Include="Code\SAPColumnType.cs" />
+    <Compile Include="Code\SAPExtensions.cs" />
+    <Compile Include="Code\ServiceLayerHelper.cs" />
+    <Compile Include="Implements\LiquidacionTarjetasRepository.cs" />
+    <Compile Include="Implements\VehicleRepository.cs" />
+    <Compile Include="Implements\MessageRepository.cs" />
+    <Compile Include="Implements\BusinessPartnerRepository.cs" />
+    <Compile Include="Implements\CertificateAssignmentRepository.cs" />
+    <Compile Include="Implements\CounterRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\ODLNDocumentRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\ODPIDocumentRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\OINVDocumentRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\OPDNDocumentRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\OPORDocumentRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\OPRQDocumentRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\OQUTDocumentRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\ORDNDocumentRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\ORINDocumentRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\ORRRDocumentRepository.cs" />
+    <Compile Include="Implements\DriverRepository.cs" />
+    <Compile Include="Implements\EmployeeRepository.cs" />
+    <Compile Include="Implements\OCSTRepository.cs" />
+    <Compile Include="Implements\OADMRepository.cs" />
+    <Compile Include="Implements\OARDRepository.cs" />
+    <Compile Include="Implements\ODSPRepository.cs" />
+    <Compile Include="Implements\OFTPRepository.cs" />
+    <Compile Include="Implements\OFUPRepository.cs" />
+    <Compile Include="Implements\DistributionHistoryRepository.cs" />
+    <Compile Include="Implements\OIBTRepository.cs" />
+    <Compile Include="Implements\OITMRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\ORDRDocumentRepository.cs" />
+    <Compile Include="Implements\InfrastructureRepository.cs" />
+    <Compile Include="Implements\OPDSRepository.cs" />
+    <Compile Include="Implements\ORTRRepository.cs" />
+    <Compile Include="Implements\DocumentRepository\OWTQDocumentRepository.cs" />
+    <Compile Include="Implements\OTDIRepository.cs" />
+    <Compile Include="Implements\OWHSRepository.cs" />
+    <Compile Include="Implements\OTRDRepository.cs" />
+    <Compile Include="Implements\RouteRepository.cs" />
+    <Compile Include="Implements\TariffMotiveRepository.cs" />
+    <Compile Include="Implements\TariffRepository.cs" />
+    <Compile Include="Implements\TransferItemRepository.cs" />
+    <Compile Include="Implements\TransporterLiquidateRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\BaseLiquidacionTarjetasRepository.cs" />
+    <Compile Include="Repository\BaseVehicleRepository.cs" />
+    <Compile Include="Repository\BaseMessageRepository.cs" />
+    <Compile Include="Repository\BaseBusinessPartnerRepository.cs" />
+    <Compile Include="Repository\BaseCertificateAssignmentRepository.cs" />
+    <Compile Include="Repository\BaseCounterRepository.cs" />
+    <Compile Include="Repository\BaseDistributionHistoryRepository.cs" />
+    <Compile Include="Repository\BaseDriverRepository.cs" />
+    <Compile Include="Repository\BaseEmployeeRepository.cs" />
+    <Compile Include="Repository\BaseOCSTRepository.cs" />
+    <Compile Include="Repository\BaseOADMRepository.cs" />
+    <Compile Include="Repository\BaseOARDRepository.cs" />
+    <Compile Include="Repository\BaseODSPRepository.cs" />
+    <Compile Include="Repository\BaseOFTPRepository.cs" />
+    <Compile Include="Repository\BaseOFUPRepository.cs" />
+    <Compile Include="Repository\BaseOIBTRepository.cs" />
+    <Compile Include="Repository\BaseOITMRepository.cs" />
+    <Compile Include="Repository\BaseInfrastructureRepository.cs" />
+    <Compile Include="Repository\BaseOPDSRepository.cs" />
+    <Compile Include="Repository\BaseORTRRepository.cs" />
+    <Compile Include="Repository\BaseOTDIRepository.cs" />
+    <Compile Include="Repository\BaseOTRDRepository.cs" />
+    <Compile Include="Repository\BaseOWHSRepository.cs" />
+    <Compile Include="Repository\BaseRouteRepository.cs" />
+    <Compile Include="Repository\BaseSAPDocumentRepository.cs" />
+    <Compile Include="Repository\BaseTariffMotiveRepository.cs" />
+    <Compile Include="Repository\BaseTariffRepository.cs" />
+    <Compile Include="Repository\BaseTransferItemRepository.cs" />
+    <Compile Include="Repository\BaseTransporterLiquidateRepository.cs" />
+    <Compile Include="UnitOfWork.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\0. CrossCutting\CrossCutting\Exxis.Addon.HojadeRutaAGuia.CrossCutting.csproj">
+      <Project>{c6f15ddb-3fd5-41b3-b266-e2c7321a1f06}</Project>
+      <Name>Exxis.Addon.HojadeRutaAGuia.CrossCutting</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

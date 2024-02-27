@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Campos>
+<Cabecera>
+	<CardCode>Codigo SN</CardCode>
+	<DocDate>Fecha OV</DocDate>
+	<DocDueDate>Fecha Entrega</DocDueDate>
+	<CardName>Nombre SN</CardName>
+	<LicTradNum>RUC</LicTradNum>
+	<Address>Direccion Envio</Address>
+</Cabecera>
+<Detalle>
+	<ItemCode>Codigo Articulo</ItemCode>
+	<Quantity>Cantidad</Quantity>
+	<UnitPrice>Precio Unitario</UnitPrice>
+	<PriceAfVAT>Precio C/IGV</PriceAfVAT>
+	<unitMsr>Unidad Medida</unitMsr>
+</Detalle>
+</Campos>

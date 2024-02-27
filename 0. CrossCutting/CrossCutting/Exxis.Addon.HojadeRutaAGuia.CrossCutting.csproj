@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C6F15DDB-3FD5-41B3-B266-E2C7321A1F06}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Exxis.Addon.HojadeRutaAGuia.CrossCutting</RootNamespace>
+    <AssemblyName>Exxis.Addon.HojadeRutaAGuia.CrossCutting</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DisposableSAPBO">
+      <HintPath>..\..\4. Library\DisposableSAPBO.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\4. Library\SAPBusinessOneSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VSVersionControl">
+      <HintPath>..\..\4. Library\VSVersionControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Z.ExtensionMethods, Version=2.1.1.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Z.ExtensionMethods.2.1.1\lib\net45\Z.ExtensionMethods.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Code\Attributes\SAPColumnAttribute.cs" />
+    <Compile Include="Code\Attributes\SAPForceUpdateAttribute.cs" />
+    <Compile Include="Code\Attributes\SAPObjectAttribute.cs" />
+    <Compile Include="Code\Attributes\SAPValidValueDescription.cs" />
+    <Compile Include="Code\Attributes\UDOFatherReferenceAttribute.cs" />
+    <Compile Include="Code\BaseSAPTable.cs" />
+    <Compile Include="Code\BaseUDO.cs" />
+    <Compile Include="Code\DisposableBO\SafeRecordSet.cs" />
+    <Compile Include="Code\Models\SAPError.cs" />
+    <Compile Include="Code\Models\SAPRelatedDocument.cs" />
+    <Compile Include="Code\Models\SAPSelectedBatch.cs" />
+    <Compile Include="Code\SAPConstanst.cs" />
+    <Compile Include="Code\Time.cs" />
+    <Compile Include="Code\Models\SAPDocument.cs" />
+    <Compile Include="Code\Models\SAPDocumentLine.cs" />
+    <Compile Include="Constant\DistributionFlow.cs" />
+    <Compile Include="Constant\DistributionDeliveryStatus.cs" />
+    <Compile Include="Constant\DocumentManagmentStatus.cs" />
+    <Compile Include="Constant\MotiveType.cs" />
+    <Compile Include="Constant\ReportType.cs" />
+    <Compile Include="Constant\SAPCodeType.cs" />
+    <Compile Include="Constant\TransporterTariffRateType.cs" />
+    <Compile Include="Model\ApiResponse\RouteBuildResponse.cs" />
+    <Compile Include="Model\Localization\Header\BPP_CONDUC.cs" />
+    <Compile Include="Model\Localization\Header\VS_PD_MOTR.cs" />
+    <Compile Include="Model\Localization\Header\BPP_VEHICU.cs" />
+    <Compile Include="Model\Local\BatchAssignation.cs" />
+    <Compile Include="Model\Local\Item.cs" />
+    <Compile Include="Model\Local\ListaSAPPlantilla.cs" />
+    <Compile Include="Model\Report\CertificadoCalidadModel.cs" />
+    <Compile Include="Model\Report\ControlCargaModel.cs" />
+    <Compile Include="Model\Report\GuiaRemisionModel.cs" />
+    <Compile Include="Model\Report\LiquidationRouteModel.cs" />
+    <Compile Include="Model\Report\PickingSheet.cs" />
+    <Compile Include="Model\ServiceLayer\Detail\JournalEntryLineSL.cs" />
+    <Compile Include="Model\ServiceLayer\Detail\LiquidationLineSL.cs" />
+    <Compile Include="Model\ServiceLayer\Detail\ReconciliationLinesSL.cs" />
+    <Compile Include="Model\ServiceLayer\Header\JournalEntrySL.cs" />
+    <Compile Include="Model\ServiceLayer\Header\LiquidationSL.cs" />
+    <Compile Include="Model\ServiceLayer\Header\ReconciliationSL.cs" />
+    <Compile Include="Model\System\Detail\CRD1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\DLN1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\DPI1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\INV1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\PDN1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\POR1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\PRQ1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\QUT1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\RDN1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\RIN1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\RRR1.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\WTQ1.cs" />
+    <Compile Include="Model\System\Detail\RDR1_.cs" />
+    <Compile Include="Model\System\Detail\WTR1.cs" />
+    <Compile Include="Model\System\Header\ContactPerson.cs" />
+    <Compile Include="Model\System\Header\Document\OCTG.cs" />
+    <Compile Include="Model\System\Header\Document\ODLN.cs" />
+    <Compile Include="Model\System\Header\Document\ODPI.cs" />
+    <Compile Include="Model\System\Header\Document\OINV.cs" />
+    <Compile Include="Model\System\Header\Document\OPDN.cs" />
+    <Compile Include="Model\System\Header\Document\OPOR.cs" />
+    <Compile Include="Model\System\Header\Document\OPRQ.cs" />
+    <Compile Include="Model\System\Header\Document\OQUT.cs" />
+    <Compile Include="Model\System\Header\Document\ORDN.cs" />
+    <Compile Include="Model\System\Header\Document\ORIN.cs" />
+    <Compile Include="Model\System\Header\OACT.cs" />
+    <Compile Include="Model\System\Header\OCST.cs" />
+    <Compile Include="Model\System\Header\ORCT.cs" />
+    <Compile Include="Model\System\Header\OWTR.cs" />
+    <Compile Include="Model\System\Header\OADM.cs" />
+    <Compile Include="Model\System\Header\OCRD.cs" />
+    <Compile Include="Model\System\Header\OHEM.cs" />
+    <Compile Include="Model\System\Header\OIBT.cs" />
+    <Compile Include="Model\System\Header\OITM.cs" />
+    <Compile Include="Model\System\Header\Document\ORDR.cs" />
+    <Compile Include="Model\System\Detail\DocumentLine\RDR1.cs" />
+    <Compile Include="Model\System\Header\Document\ORRR.cs" />
+    <Compile Include="Model\System\Header\OWTQ.cs" />
+    <Compile Include="Model\System\Header\ORDR_.cs" />
+    <Compile Include="Model\System\Header\OWHS.cs" />
+    <Compile Include="Model\UDO\Detail\ACD1.cs" />
+    <Compile Include="Model\UDO\Detail\ARD1.cs" />
+    <Compile Include="Model\UDO\Detail\ARD2.cs" />
+    <Compile Include="Model\UDO\Detail\ARD3.cs" />
+    <Compile Include="Model\UDO\Detail\ARD4.cs" />
+    <Compile Include="Model\UDO\Detail\ATP1.cs" />
+    <Compile Include="Model\UDO\Detail\ATP2.cs" />
+    <Compile Include="Model\UDO\Detail\DCR1.cs" />
+    <Compile Include="Model\UDO\Detail\FTP1.cs" />
+    <Compile Include="Model\UDO\Detail\FTP2.cs" />
+    <Compile Include="Model\UDO\Detail\HOJ1.cs" />
+    <Compile Include="Model\UDO\Detail\HGR1.cs" />
+    <Compile Include="Model\UDO\Detail\LDP1.cs" />
+    <Compile Include="Model\UDO\Detail\LDP2.cs" />
+    <Compile Include="Model\UDO\Detail\LTR1.cs" />
+    <Compile Include="Model\UDO\Detail\PCG1.cs" />
+    <Compile Include="Model\UDO\Detail\PCG2.cs" />
+    <Compile Include="Model\UDO\Detail\RTU1.cs" />
+    <Compile Include="Model\UDO\Detail\FUP1.cs" />
+    <Compile Include="Model\UDO\Detail\HDM1.cs" />
+    <Compile Include="Model\UDO\Detail\MPR1.cs" />
+    <Compile Include="Model\UDO\Detail\PDG1.cs" />
+    <Compile Include="Model\UDO\Detail\REN1.cs" />
+    <Compile Include="Model\UDO\Detail\RTR1.cs" />
+    <Compile Include="Model\UDO\Detail\RTR2.cs" />
+    <Compile Include="Model\UDO\Detail\RTR3.cs" />
+    <Compile Include="Model\UDO\Detail\TRD1.cs" />
+    <Compile Include="Model\UDO\Detail\TRD2.cs" />
+    <Compile Include="Model\UDO\Detail\VHR1.cs" />
+    <Compile Include="Model\UDO\Header\OACD.cs" />
+    <Compile Include="Model\UDO\Header\OARP.cs" />
+    <Compile Include="Model\UDO\Header\OARD.cs" />
+    <Compile Include="Model\UDO\Header\OATP.cs" />
+    <Compile Include="Model\UDO\Header\OCEM.cs" />
+    <Compile Include="Model\UDO\Header\OCHA.cs" />
+    <Compile Include="Model\UDO\Header\OCRD.cs" />
+    <Compile Include="Model\UDO\Header\OCVL.cs" />
+    <Compile Include="Model\UDO\Header\ODCR.cs" />
+    <Compile Include="Model\UDO\Header\ODSP.cs" />
+    <Compile Include="Model\UDO\Header\OEIT.cs" />
+    <Compile Include="Model\UDO\Header\OFTP.cs" />
+    <Compile Include="Model\UDO\Header\OHOJ.cs" />
+    <Compile Include="Model\UDO\Header\OLDP.cs" />
+    <Compile Include="Model\UDO\Header\OLTR.cs" />
+    <Compile Include="Model\UDO\Header\OMAJ.cs" />
+    <Compile Include="Model\UDO\Header\OMRJ.cs" />
+    <Compile Include="Model\UDO\Header\OPAP.cs" />
+    <Compile Include="Model\UDO\Header\OPCG.cs" />
+    <Compile Include="Model\UDO\Header\ORTU.cs" />
+    <Compile Include="Model\UDO\Header\OFUP.cs" />
+    <Compile Include="Model\UDO\Header\OHDM.cs" />
+    <Compile Include="Model\UDO\Header\OINP.cs" />
+    <Compile Include="Model\UDO\Header\OMPR.cs" />
+    <Compile Include="Model\UDO\Header\OMTT.cs" />
+    <Compile Include="Model\UDO\Header\OPDG.cs" />
+    <Compile Include="Model\UDO\Header\OPDS.cs" />
+    <Compile Include="Model\UDO\Header\OREN.cs" />
+    <Compile Include="Model\UDO\Header\ORTR.cs" />
+    <Compile Include="Model\UDO\Header\OTMI.cs" />
+    <Compile Include="Model\UDO\Header\OTMT.cs" />
+    <Compile Include="Model\UDO\Header\OTPD.cs" />
+    <Compile Include="Model\UDO\Header\OHRG.cs" />
+    <Compile Include="Model\UDO\Header\OTRD.cs" />
+    <Compile Include="Model\UDO\Header\OTVH.cs" />
+    <Compile Include="Model\UDO\Header\OUSM.cs" />
+    <Compile Include="Model\UDO\Header\OVHR.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\ErrorMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\SolutionResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SolutionResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\GenericExtensions.cs" />
+    <Compile Include="Utilities\QueryHelper.cs" />
+    <Compile Include="Utilities\RecordSetHelper.cs" />
+    <Compile Include="Utilities\ResourceNamespace.cs" />
+    <Compile Include="Utilities\ElementTuple.cs" />
+    <Compile Include="Utilities\EnumerableHelper.cs" />
+    <Compile Include="Utilities\GenericHelper.cs" />
+    <Compile Include="Utilities\SAPEntityHelper.cs" />
+    <Compile Include="Utilities\SapHelper.cs" />
+    <Compile Include="Utilities\SendMailHelper.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
+    <Compile Include="Utilities\TypeExtensions.cs" />
+    <Compile Include="Utilities\XmlExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ErrorMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SolutionResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SolutionResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
