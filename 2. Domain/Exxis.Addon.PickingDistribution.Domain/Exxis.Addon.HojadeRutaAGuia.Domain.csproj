@@ -152,7 +152,7 @@
       <Project>{C6F15DDB-3FD5-41B3-B266-E2C7321A1F06}</Project>
       <Name>Exxis.Addon.HojadeRutaAGuia.CrossCutting</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\3. Data\Ventura.Addon.PickingDistribution.Data\Exxis.Addon.HojadeRutaAGuia.Data.csproj">
+    <ProjectReference Include="..\..\3. Data\Exxis.Addon.PickingDistribution.Data\Exxis.Addon.HojadeRutaAGuia.Data.csproj">
       <Project>{5EB4FC73-2742-48EA-8D65-240AA8DA39C9}</Project>
       <Name>Exxis.Addon.HojadeRutaAGuia.Data</Name>
     </ProjectReference>
