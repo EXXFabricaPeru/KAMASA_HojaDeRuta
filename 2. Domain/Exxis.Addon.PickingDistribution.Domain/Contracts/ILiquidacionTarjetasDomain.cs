@@ -41,5 +41,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain.Contracts
         void ActualizarProgramado(string numeracion, string estado);
         void ActualizarEnvioSunat(string sunat);
         void ActualizarEstadoHojaGuia(string estado, string codigo);
+        Tuple<bool, string> GetCargaUtilByPlaca(string placa);
+        Tuple<bool, string> ObtenerPDF(string numeracion);
     }
 }

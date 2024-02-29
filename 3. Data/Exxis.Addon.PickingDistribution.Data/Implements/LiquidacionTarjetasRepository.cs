@@ -579,8 +579,22 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
             OHOJ hoja = new OHOJ();
             try
             {
+                var r1 = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
+                var val = "select* from \"@EX_HR_OHGR\"  where \"U_EXK_COD\" = '{0}'   and \"Canceled\"='N' ";
+                r1.DoQuery(string.Format(val, value));
+                while (!r1.EoF)
+                {
+
+                    return Tuple.Create(false, hoja);
+                    r1.MoveNext();
+                }
+
+
+                
+
+
                 var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
-                var query = "select * from \"@EX_HR_OHOJ\" where \"Code\"='{0}'   ";
+                var query = "select * from \"@EXK_HOJARUTA\" where \"Code\"='{0}'   ";
                 recordSet.DoQuery(string.Format(query, value));
 
                 while (!recordSet.EoF)
@@ -589,8 +603,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
 
                     hoja.Transportista = recordSet.GetColumnValue("U_EXK_TRANSP").ToString();
                     hoja.Chofer = recordSet.GetColumnValue("U_EXK_CHOFER").ToString();
-                    hoja.Auxiliar1 = recordSet.GetColumnValue("U_EXK_AUX1").ToString();
-                    hoja.Auxiliar2 = recordSet.GetColumnValue("U_EXK_AUX2").ToString();
+                    hoja.Auxiliar1 = recordSet.GetColumnValue("U_EXK_AUX1")?.ToString();
+                    hoja.Auxiliar2 = recordSet.GetColumnValue("U_EXK_AUX2")?.ToString();
                     hoja.Auxiliar3 = recordSet.GetColumnValue("U_EXK_AUX3")?.ToString();
                     hoja.InicioTraslado = recordSet.GetColumnValue("U_EXK_FEINTRAS").ToDateTime();
                     hoja.FinTraslado = recordSet.GetColumnValue("U_EXK_FEFITRAS").ToDateTime();
@@ -599,18 +613,18 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                     recordSet.MoveNext();
                 }
                 var recordSetDet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
-                var queryDet = "select * from \"@EX_HR_HOJ1\" where \"Code\"='{0}'   ";
-                recordSet.DoQuery(string.Format(query, value));
+                var queryDet = "select * from \"@EXK_DHOJARUTA\" where \"Code\"='{0}'   ";
+                recordSetDet.DoQuery(string.Format(queryDet, value));
 
                 List<HOJ1> list = new List<HOJ1>();
                 while (!recordSetDet.EoF)
                 {
                     HOJ1 line = new HOJ1();
 
-                    line.ZonaDespacho = recordSet.GetColumnValue("U_EXK_ZONA").ToString();
+                    line.ZonaDespacho = recordSetDet.GetColumnValue("U_EXK_ZONDESP").ToString();
 
                     list.Add(line);
-                    recordSet.MoveNext();
+                    recordSetDet.MoveNext();
                 }
 
                 hoja.DetalleZonas = list;
@@ -640,9 +654,10 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
 
                 }
                 var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
-                var query = "select  * from \"ODLN\"  where \"U_EXX_FE_GRPESOTOTAL\">0 and \"FolioPref\" is not null and \"DocDate\">= TO_DATE('{0}', 'YYYYMMDD') and \"DocDate\"<= TO_DATE('{1}', 'YYYYMMDD') {2} ";
+                var query = "select  * from \"ODLN\"  where \"FolioPref\" is not null and \"DocDate\">= TO_DATE('{0}', 'YYYYMMDD') and \"DocDate\"<= TO_DATE('{1}', 'YYYYMMDD') {2} ";
                 recordSet.DoQuery(string.Format(query, desde, hasta,queryprogram));
 
+                var ex = string.Format(query, desde, hasta, queryprogram);
                 while (!recordSet.EoF)
                 {
                     ODLN Guias = new ODLN();
@@ -651,6 +666,12 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                     Guias.Peso = recordSet.GetColumnValue("U_EXX_FE_GRPESOTOTAL").ToString();
                     Guias.CantidadBultos = (recordSet.GetColumnValue("U_EXK_CANTBULTO") == null) ? 0 : recordSet.GetColumnValue("U_EXK_CANTBULTO").ToInt32();
                     Guias.Programado = recordSet.GetColumnValue("U_EXK_HRPROG").ToString();
+                    Guias.Zona = recordSet.GetColumnValue("U_EXK_DESCZONA") != null ? recordSet.GetColumnValue("U_EXK_DESCZONA").ToString() : "";  
+                    Guias.DireccionDespacho = recordSet.GetColumnValue("Address2")?.ToString();
+                    var dept = recordSet.GetColumnValue("U_EXK_DPTO")!=null ? recordSet.GetColumnValue("U_EXK_DPTO").ToString():"";
+                    var proc = recordSet.GetColumnValue("U_EXK_PROVINCIA") != null ? recordSet.GetColumnValue("U_EXK_PROVINCIA").ToString() : "";
+                    var dist = recordSet.GetColumnValue("U_EXK_DISTRITO") != null ? recordSet.GetColumnValue("U_EXK_DISTRITO").ToString() : "";
+                    Guias.DepProvZona = dept + "-" + proc + "-" + dist;
 
                     listaGuias.Add(Guias);
                     recordSet.MoveNext();
@@ -659,7 +680,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 return Tuple.Create(true, listaGuias);
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
                 return Tuple.Create(false, listaGuias);
             }
@@ -795,6 +816,69 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                     Company.EndTransaction(BoWfTransOpt.wf_RollBack);
 
                 //return Tuple.Create(false, exception.Message);
+            }
+        }
+
+        public override Tuple<bool, string> GetCargaUtilByPlaca(string placa)
+        {
+            try
+            {
+
+                //var list= TiendasList(Login);
+
+                var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
+                var query = "Select * from \"@EXX_VEHICU\" where \"Code\"='{0}' ";
+                recordSet.DoQuery(string.Format(query, placa));
+
+                while (!recordSet.EoF)
+                {
+                    var Code = recordSet.GetColumnValue("U_EXK_CARGAUTIL").ToString();
+                    return Tuple.Create(true, Code);
+                    recordSet.MoveNext();
+                }
+
+                return Tuple.Create(false, "");
+            }
+            catch (Exception ex)
+            {
+                return Tuple.Create(false, ex.Message);
+            }
+            finally
+            {
+                GenericHelper.ReleaseCOMObjects();
+            }
+        }
+
+        public override Tuple<bool, string> ObtenerPDF(string numeracion)
+        {
+            try
+            {
+
+                //var list= TiendasList(Login);
+
+                var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
+                //var query = "Select * from \"@EXX_VEHICU\" where \"Code\"='{0}' ";
+                //recordSet.DoQuery(string.Format(query, placa));
+
+                var query = " select * from \"FEX_PE\".\"FEX_DOCUMENTOS\" where \"IdFexCompany\" = 7 and \"IdDocumento\" = 160 ";
+                recordSet.DoQuery(string.Format(query));
+
+                while (!recordSet.EoF)
+                {
+                    var Code = recordSet.GetColumnValue("PDF").ToString();
+                    return Tuple.Create(true, Code);
+                    recordSet.MoveNext();
+                }
+
+                return Tuple.Create(false, "");
+            }
+            catch (Exception ex)
+            {
+                return Tuple.Create(false, ex.Message);
+            }
+            finally
+            {
+                GenericHelper.ReleaseCOMObjects();
             }
         }
     }

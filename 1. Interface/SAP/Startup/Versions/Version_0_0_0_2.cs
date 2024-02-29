@@ -14,7 +14,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup.Versions
 
         protected override void InitializeTables()
         {
-            //CreateObject(typeof(OHOJ));
+            
             CreateObject(typeof(OHRG));
         }
     }

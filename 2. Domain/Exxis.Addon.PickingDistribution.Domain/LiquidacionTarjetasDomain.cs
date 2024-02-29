@@ -124,5 +124,15 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain
         {
             UnitOfWork.LiquidacionTarjetasRepository.ActualizarEstadoHojaGuia(estado, codigo);
         }
+
+        public Tuple<bool, string> GetCargaUtilByPlaca(string placa)
+        {
+            return UnitOfWork.LiquidacionTarjetasRepository.GetCargaUtilByPlaca(placa);
+        }
+
+        public Tuple<bool, string> ObtenerPDF(string numeracion)
+        {
+            return UnitOfWork.LiquidacionTarjetasRepository.ObtenerPDF(numeracion);
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header.Document
     [SAPObject(BoObjectTypes.oDeliveryNotes)]
     public class ODLN : SAPDocument<DLN1>
     {
-        
+        public string DireccionDespacho { get; set; }
+        public string Zona { get; set; }
+        public string DepProvZona { get; set; }
     }
 }

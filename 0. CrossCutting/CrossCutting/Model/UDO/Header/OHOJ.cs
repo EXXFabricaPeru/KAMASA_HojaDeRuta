@@ -19,8 +19,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header
     [DefaultForm(SAPbobsCOM.BoYesNoEnum.tYES)]
     public class OHOJ : BaseUDO
     {
-        public const string ID = "EX_HR_OHOJ";
-        public const string DESCRIPTION = "HOJA_DE_RUTA";
+        public const string ID = "EXK_HOJARUTA";
+        public const string DESCRIPTION = "EXK - Hoja de Ruta";
 
         public OHOJ()
         {
@@ -56,7 +56,14 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header
         [FormColumn(9), FieldNoRelated(@"U_EXK_FEFITRAS", @"Fin Traslado", BoDbTypes.Date, Size = 10)]
         public DateTime FinTraslado { get; set; }
 
+        [FormColumn(10), FieldNoRelated(@"U_EXK_FECHA", @"Fecha", BoDbTypes.Date, Size = 10)]
+        public DateTime Fecha { get; set; }
 
+        [FormColumn(11), FieldNoRelated(@"U_EXK_ACTUALIZAR", @"Actualizar GR", BoDbTypes.Alpha, Size = 10)]
+        public string ActualizarGR { get; set; }
+
+        [FormColumn(12), FieldNoRelated(@"U_EXK_ESTADO", @"Estado", BoDbTypes.Alpha, Size = 10)]
+        public string Estado { get; set; }
 
         [ChildProperty(HOJ1.ID)]
         public List<HOJ1> DetalleZonas { get; set; }

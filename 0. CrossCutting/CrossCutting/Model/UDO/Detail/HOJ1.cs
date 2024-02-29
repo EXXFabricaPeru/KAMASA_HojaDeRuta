@@ -17,8 +17,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Detail
     [UDOFatherReference(OHRG.ID, 1)]
     public class HOJ1 : BaseUDO
     {
-        public const string ID = "EX_HR_HOJ1";
-        public const string DESCRIPTION = "Detalle de Guías";
+        public const string ID = "EXK_DHOJARUTA";
+        public const string DESCRIPTION = "EXK - Hoja Ruta Linea";
 
         [EnhancedColumn(Visible = false), ColumnProperty("Code")]
         public string Code { get; set; }
@@ -26,7 +26,10 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Detail
         [EnhancedColumn(Visible = false), ColumnProperty("LineId")]
         public int LineId { get; set; }
 
-        [EnhancedColumn(1), FieldNoRelated("U_EXK_ZONA", "Zona Despacho", BoDbTypes.Alpha, Size = 50)]
+        [EnhancedColumn(1), FieldNoRelated("U_EXK_CODZONDESP", "Cod. Zona Despacho", BoDbTypes.Alpha, Size = 10)]
+        public string CodZonaDespacho { get; set; }
+        
+        [EnhancedColumn(2), FieldNoRelated("U_EXK_ZONDESP", "Zona Despacho", BoDbTypes.Alpha, Size = 100)]
         public string ZonaDespacho { get; set; }
 
 
