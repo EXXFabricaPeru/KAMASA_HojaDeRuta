@@ -11,7 +11,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
     {
      
         private HojaRutaaGuiaApplicationInitializer(SAPbouiCOM.Framework.Application application)
-            : base(MakeTuple(ProductId, ProductDescription),MakeTuple(Constants.Menu.MAIN_APPLICATION, @"VS-Addon Hoja de Ruta a Guías"), application)
+            : base(MakeTuple(ProductId, ProductDescription),MakeTuple(Constants.Menu.MAIN_APPLICATION, @"EXXIS-Addon Hoja de Ruta a Guías"), application)
         {
         }
 
@@ -19,8 +19,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
         {
             versionCollection.Add(Version_0_0_0_1.Make);
             versionCollection.Add(Version_0_0_0_2.Make);
-            //versionCollection.Add(Version_0_0_0_3.Make);
-            //versionCollection.Add(Version_0_0_0_4.Make);
+            versionCollection.Add(Version_0_0_0_3.Make);
+            versionCollection.Add(Version_0_0_0_4.Make);
 
         }
 

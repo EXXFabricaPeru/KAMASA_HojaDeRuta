@@ -12,6 +12,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header
 
         [SAPColumn("E_MailL")]
         public string Email { get; set; }
-        
+
+        [SAPColumn("Notes1")]
+        public string Licencia { get; set; }
+
     }
 }

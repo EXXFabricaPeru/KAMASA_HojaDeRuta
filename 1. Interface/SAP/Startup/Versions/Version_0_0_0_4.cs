@@ -1,5 +1,6 @@
 ﻿using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Models;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header;
+using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header.Document;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Detail;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header;
 using Exxis.Addon.HojadeRutaAGuia.Interface.Resources.Query;
@@ -17,7 +18,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup.Versions
 
         protected override void InitializeTables()
         {
-
+            SyncSystemTable(typeof(ODLN));
 
         }
         protected override void InitializeFormattedSearch()

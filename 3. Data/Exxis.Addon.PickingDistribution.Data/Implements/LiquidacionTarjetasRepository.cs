@@ -21,6 +21,9 @@ using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities;
 using Exxis.Addon.HojadeRutaAGuia.Data.Code;
 using Exxis.Addon.HojadeRutaAGuia.Data.Repository;
 using Sap.Data.Hana;
+using System.IO;
+using System.Diagnostics;
+using System.Data;
 
 namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
 {
@@ -590,7 +593,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 }
 
 
-                
+
 
 
                 var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
@@ -608,7 +611,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                     hoja.Auxiliar3 = recordSet.GetColumnValue("U_EXK_AUX3")?.ToString();
                     hoja.InicioTraslado = recordSet.GetColumnValue("U_EXK_FEINTRAS").ToDateTime();
                     hoja.FinTraslado = recordSet.GetColumnValue("U_EXK_FEFITRAS").ToDateTime();
-                    hoja.Placa = recordSet.GetColumnValue("U_EXK_PLACA").ToString();
+                    hoja.Placa = recordSet.GetColumnValue("U_EXK_PLACA")?.ToString();
 
                     recordSet.MoveNext();
                 }
@@ -654,8 +657,11 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
 
                 }
                 var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
-                var query = "select  * from \"ODLN\"  where \"FolioPref\" is not null and \"DocDate\">= TO_DATE('{0}', 'YYYYMMDD') and \"DocDate\"<= TO_DATE('{1}', 'YYYYMMDD') {2} ";
-                recordSet.DoQuery(string.Format(query, desde, hasta,queryprogram));
+                var query = "select (select \"Name\" from \"@EXK_ZONAVENTA\" where \"Code\"=D.\"U_EXK_AGENZONA\") as \"ZonaAgencia\", " +
+                    " ZN.\"Name\" , D.*  from \"ODLN\" D join  \"DLN12\" D12 on D12.\"DocEntry\"=D.\"DocEntry\" " +
+                    " LEFT JOIN \"@EXK_ZONAVENTA\" ZN on ZN.\"Code\"=D12.\"U_EXX_TPED_ZONAS\" " +
+                    " where \"FolioPref\" is not null and \"DocDate\">= TO_DATE('{0}', 'YYYYMMDD') and \"DocDate\"<= TO_DATE('{1}', 'YYYYMMDD') {2} ";
+                recordSet.DoQuery(string.Format(query, desde, hasta, queryprogram));
 
                 var ex = string.Format(query, desde, hasta, queryprogram);
                 while (!recordSet.EoF)
@@ -666,12 +672,25 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                     Guias.Peso = recordSet.GetColumnValue("U_EXX_FE_GRPESOTOTAL").ToString();
                     Guias.CantidadBultos = (recordSet.GetColumnValue("U_EXK_CANTBULTO") == null) ? 0 : recordSet.GetColumnValue("U_EXK_CANTBULTO").ToInt32();
                     Guias.Programado = recordSet.GetColumnValue("U_EXK_HRPROG").ToString();
-                    Guias.Zona = recordSet.GetColumnValue("U_EXK_DESCZONA") != null ? recordSet.GetColumnValue("U_EXK_DESCZONA").ToString() : "";  
-                    Guias.DireccionDespacho = recordSet.GetColumnValue("Address2")?.ToString();
-                    var dept = recordSet.GetColumnValue("U_EXK_DPTO")!=null ? recordSet.GetColumnValue("U_EXK_DPTO").ToString():"";
+                    var valAgencia = recordSet.GetColumnValue("U_EXK_AGENCOD") != null ? recordSet.GetColumnValue("U_EXK_AGENCOD").ToString() : "";
+
+                    if (string.IsNullOrEmpty(valAgencia))
+                    {
+                        Guias.Zona = recordSet.GetColumnValue("Name") != null ? recordSet.GetColumnValue("Name").ToString() : "";
+                        Guias.DireccionDespacho = recordSet.GetColumnValue("Address2")?.ToString();
+
+                    }
+                    else
+                    {
+                        Guias.Zona = recordSet.GetColumnValue("ZonaAgencia") != null ? recordSet.GetColumnValue("ZonaAgencia").ToString() : "";
+                        Guias.DireccionDespacho = recordSet.GetColumnValue("U_EXK_AGENDIREC") != null ? recordSet.GetColumnValue("U_EXK_AGENDIREC").ToString() : "";
+                    }
+                    var dept = recordSet.GetColumnValue("U_EXK_DPTO") != null ? recordSet.GetColumnValue("U_EXK_DPTO").ToString() : "";
                     var proc = recordSet.GetColumnValue("U_EXK_PROVINCIA") != null ? recordSet.GetColumnValue("U_EXK_PROVINCIA").ToString() : "";
                     var dist = recordSet.GetColumnValue("U_EXK_DISTRITO") != null ? recordSet.GetColumnValue("U_EXK_DISTRITO").ToString() : "";
                     Guias.DepProvZona = dept + "-" + proc + "-" + dist;
+
+
 
                     listaGuias.Add(Guias);
                     recordSet.MoveNext();
@@ -703,7 +722,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
 
                 while (!recordSet.EoF)
                 {
-                    var Code = DateTime.Now.Year+"-"+ recordSet.GetColumnValue("count").ToString();
+                    var Code = DateTime.Now.Year + "-" + recordSet.GetColumnValue("count").ToString();
                     return Code;
                     recordSet.MoveNext();
                 }
@@ -716,7 +735,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
             }
         }
 
-        public override void ActualizarProgramado(string numeracion, string estado)
+        public override void ActualizarProgramado(string numeracion, string estado, ODLN datosGuia)
         {
             try
             {
@@ -727,14 +746,29 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 BaseSAPDocumentRepository<ODLN, DLN1> documentRepository = new UnitOfWork(Company).DeliveryRepository;
                 string foliopref = list[0];
                 int folionum = list[1].ToInt32();
-                var document = documentRepository.RetrieveDocuments(t => t.FolioPref == foliopref && t.FolioNum== folionum).FirstOrDefault();
+                var document = documentRepository.RetrieveDocuments(t => t.FolioPref == foliopref && t.FolioNum == folionum).FirstOrDefault();
 
                 document.Programado = estado;
-                documentRepository.UpdateCustomFieldsFromDocument(document);
+                document.FechaInicioTraslado = datosGuia.FechaInicioTraslado;
+                document.CodigoTransportista = datosGuia.CodigoTransportista;
+                document.NombreTransportista = datosGuia.NombreTransportista;
+                document.NombreConductor = datosGuia.NombreConductor;
+                document.LicenciaConductor = datosGuia.LicenciaConductor;
+                document.CantidadBultos = datosGuia.CantidadBultos;
+                document.FechaGuia = document.DocumentDeliveryDate;
+                document.TipoOperacion = datosGuia.TipoOperacion;
+                document.MotivoTraslado = datosGuia.MotivoTraslado;
+                document.FEXModalidadTraslado = datosGuia.FEXModalidadTraslado;
+                document.HojaRuta = datosGuia.HojaRuta;
+                document.EstadoEnvioSunat = datosGuia.EstadoEnvioSunat;
+                var val = documentRepository.UpdateCustomFieldsFromDocument(document);
                 //var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
                 //var query = " update ODLN where \"FolioPref\"='{0}' and \"FolioNum\"={1}";
                 //recordSet.DoQuery(string.Format(query,list[0],list[1]));
-
+                if (!val.Item1)
+                {
+                    throw new Exception(val.Item2);
+                }
                 //using (HanaCommand updateCommand = new HanaCommand(query, connection))
                 //{
                 //    // Ejecutar la sentencia de actualización
@@ -746,7 +780,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
             }
             catch (Exception ex)
             {
-                var x = ex;
+                throw new Exception(ex.Message);
             }
             finally
             {
@@ -767,6 +801,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 int folionum = list[1].ToInt32();
                 var document = documentRepository.RetrieveDocuments(t => t.FolioPref == foliopref && t.FolioNum == folionum).FirstOrDefault();
 
+                document.EstadoEnvioSunat = "Y";
                 document.EstadoSUNAT = "AUT";
                 documentRepository.UpdateCustomFieldsFromDocument(document);
                 //var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
@@ -781,10 +816,84 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 //}
 
 
+                //var list= TiendasList(Login);
+
+                var recordSetIDCompany = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
+                var queryIDCompany = "SELECT \"IdFexCompany\" FROM \"FEX_PE\".FEX_COMPANY WHERE \"dbName\"='{0}' AND IFNULL(\"BranchID\",-1) = {1}";
+                recordSetIDCompany.DoQuery(string.Format(queryIDCompany, Company.CompanyDB, document.BranchId));
+
+                var IdFexCompany = "";
+                while (!recordSetIDCompany.EoF)
+                {
+                    IdFexCompany = recordSetIDCompany.GetColumnValue("IdFexCompany").ToString();
+                    recordSetIDCompany.MoveNext();
+                }
+
+                HanaConnectionStringBuilder connBuilder = new HanaConnectionStringBuilder();
+                connBuilder.Server = "192.168.1.215:30013";
+                connBuilder.UserName = "SAPINST";
+                connBuilder.Password = "Passw0rd";
+                connBuilder.Database = "SBO_KAMASA_CAPACITACION";
+                //connBuilder.
+
+
+                //using (HanaConnection connection = new HanaConnection(connBuilder.ToString())
+                //using (HanaConnection connection = new HanaConnection())
+                //using (HanaConnection connection = new HanaConnection("Server=192.168.1.215:30015;CS=SBO_KAMASA_CAPACITACION;UserID=SAPINST;Password=Passw0rd"))
+                //{
+                //    try
+                //    {
+                //        // Abrir la conexión
+                //        connection.Open();
+
+                //        // Crear un comando SQL para ejecutar la consulta
+                //        // string query2 = "SELECT * FROM \"FEX_PE\".\"FEX_DOCUMENTOS\" WHERE \"IdFexCompany\" = 7 AND \"IdDocumento\" = 180 ";
+                //        var query = "Call \"FEX_PE\".\"FEX_ACCION_Guardar\"( " +
+                //         "  0," +//  --IN IdAccion bigint.  0 Para Insert.  Valor de IdAccion para actualizar registro existente
+                //         IdFexCompany + ", " +//    --IN IdFexCompany int.Valor de Company para documento actual
+                //           "'" + document.Indicator + "'," + //--IN CodigoEntidad varchar(50).
+                //          +document.DocumentEntry + "," +// --IN DocEntry int.
+                //         "'" + document.ObjectType + "'," +//   --IN ObjectType varchar(50).
+                //         "'" + document.DocSubType + "', " + //   --IN DocSubType varchar(50).
+                //         " '100',  " +//  --IN IdTipoAccion int.
+                //         "  'VIG', " +//   --IN Estado varchar(50).
+                //         "'" + DateTime.Now.ToString() + "'" + //--IN FechaCreacion varchar(70)
+                //         "); ";
+                //        using (HanaCommand command = new HanaCommand(query, connection))
+                //        {
+                //            command.CommandType = CommandType.StoredProcedure;
+                //            command.ExecuteNonQuery();
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        throw new Exception(ex.Message);
+                //    }
+                //}
+
+                var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
+                var query = "Call \"FEX_PE\".\"FEX_ACCION_Guardar\"( " +
+                    "  0," +//  --IN IdAccion bigint.  0 Para Insert.  Valor de IdAccion para actualizar registro existente
+                    IdFexCompany + ", " +//    --IN IdFexCompany int.Valor de Company para documento actual
+                      "'" + document.Indicator + "'," + //--IN CodigoEntidad varchar(50).
+                     +document.DocumentEntry + "," +// --IN DocEntry int.
+                    "'" + document.ObjectType + "'," +//   --IN ObjectType varchar(50).
+                    "'" + document.DocSubType + "', " + //   --IN DocSubType varchar(50).
+                 " '100',  " +//  --IN IdTipoAccion int.
+                                "  'VIG', " +//   --IN Estado varchar(50).
+                 "'" + DateTime.Now.ToString() + "'" + //--IN FechaCreacion varchar(70)
+                 "); ";
+                recordSet.DoQuery(string.Format(query));
+
+
+
+
+
+
             }
             catch (Exception ex)
             {
-                var x = ex;
+                throw new Exception(ex.Message);
             }
             finally
             {
@@ -804,7 +913,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 GeneralData generalData = generalService.GetByParams(generalDataParams);
 
                 generalData.SetProperty("U_EXK_EST", estado);
-            
+
 
                 generalService.Update(generalData);
                 Company.EndTransaction(BoWfTransOpt.wf_Commit);
@@ -848,33 +957,100 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 GenericHelper.ReleaseCOMObjects();
             }
         }
-
-        public override Tuple<bool, string> ObtenerPDF(string numeracion)
+        static byte[] DecodePdfText(string pdfText)
         {
+            // Convertir el texto PDF a bytes
+            byte[] pdfBytes = System.Text.Encoding.UTF8.GetBytes(pdfText);
+
+            // Devolver los bytes del PDF decodificado
+            return pdfBytes;
+        }
+        public override Tuple<bool, byte[]> ObtenerPDF(string numeracion)
+        {
+            byte[] res = new byte[0];
             try
             {
 
-                //var list= TiendasList(Login);
+                var list = numeracion.Split("-");
+                BaseSAPDocumentRepository<ODLN, DLN1> documentRepository = new UnitOfWork(Company).DeliveryRepository;
+                string foliopref = list[0];
+                int folionum = list[1].ToInt32();
+                var document = documentRepository.RetrieveDocuments(t => t.FolioPref == foliopref && t.FolioNum == folionum).FirstOrDefault();
 
-                var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
-                //var query = "Select * from \"@EXX_VEHICU\" where \"Code\"='{0}' ";
-                //recordSet.DoQuery(string.Format(query, placa));
 
-                var query = " select * from \"FEX_PE\".\"FEX_DOCUMENTOS\" where \"IdFexCompany\" = 7 and \"IdDocumento\" = 160 ";
-                recordSet.DoQuery(string.Format(query));
 
-                while (!recordSet.EoF)
+               
+                //connBuilder.Server = "192.168.1.215:30013";
+                //connBuilder.UserName = "SAPINST";
+                //connBuilder.Password = "Passw0rd";
+                //connBuilder.Database = "SBO_KAMASA_CAPACITACION";
+                //connBuilder.
+                BaseOPDSRepository configRepository = new UnitOfWork(Company).SettingsRepository;
+                var user=configRepository.Setting(OPDS.Codes.DBUSER);
+                var pass = configRepository.Setting(OPDS.Codes.DBPASS);
+                var server = configRepository.Setting(OPDS.Codes.SERVER);
+
+                var recordSetIDCompany = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
+                var queryIDCompany = "SELECT \"IdFexCompany\" FROM \"FEX_PE\".FEX_COMPANY WHERE \"dbName\"='{0}' AND IFNULL(\"BranchID\",-1) = {1}";
+                recordSetIDCompany.DoQuery(string.Format(queryIDCompany, Company.CompanyDB, document.BranchId));
+
+                var IdFexCompany = "";
+                while (!recordSetIDCompany.EoF)
                 {
-                    var Code = recordSet.GetColumnValue("PDF").ToString();
-                    return Tuple.Create(true, Code);
-                    recordSet.MoveNext();
+                    IdFexCompany = recordSetIDCompany.GetColumnValue("IdFexCompany").ToString();
+                    recordSetIDCompany.MoveNext();
                 }
 
-                return Tuple.Create(false, "");
+
+
+                var connectionString = "Server="+ server.Value + ";CS="+Company.CompanyDB+";UserID="+user.Value+";Password="+pass.Value;
+
+                HanaConnectionStringBuilder connBuilder = new HanaConnectionStringBuilder();
+                using (HanaConnection connection = new HanaConnection(connectionString))
+                {
+                    try
+                    {
+                        // Abrir la conexión
+                        connection.Open();
+
+                        // Crear un comando SQL para ejecutar la consulta
+                        string query2 = "SELECT * FROM \"FEX_PE\".\"FEX_DOCUMENTOS\" WHERE \"IdFexCompany\" = "+IdFexCompany+" AND \"ObjectType\" = 15 AND \"Docentry\"="+document.DocumentEntry;
+
+                        using (HanaCommand command = new HanaCommand(query2, connection))
+                        {
+                            // Ejecutar la consulta y obtener un lector de datos
+                            using (HanaDataReader reader = command.ExecuteReader())
+                            {
+                                //// Crear un DataTable para almacenar los resultados
+                                //DataTable dataTable = new DataTable();
+                                //dataTable.Load(reader); // Cargar los datos del DataReader en el DataTable
+                                if (reader.Read())
+                                {
+                                    byte[] pdfBytes = (byte[])reader["PDF"];
+                                    return Tuple.Create(true, pdfBytes); ;
+                                    //string tempFilePath = Path.GetTempFileName() + ".pdf";
+                                    //File.WriteAllBytes(tempFilePath, pdfBytes);
+
+                                    //// Abrir el archivo PDF en el navegador predeterminado
+                                    //Process.Start(tempFilePath);
+                                }
+
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                }
+
+
+
+                return Tuple.Create(false, res);
             }
             catch (Exception ex)
             {
-                return Tuple.Create(false, ex.Message);
+                return Tuple.Create(false, res);
             }
             finally
             {

@@ -1,4 +1,5 @@
-﻿using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header;
+﻿using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header.Document;
+using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities;
 using Exxis.Addon.HojadeRutaAGuia.Domain;
 using Exxis.Addon.HojadeRutaAGuia.Domain.Contracts;
@@ -11,6 +12,8 @@ using SAPbouiCOM;
 using SAPbouiCOM.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -73,6 +76,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             this._zonaRuta = ((SAPbouiCOM.EditText)(this.GetItem("24_U_E").Specific));
             this._cargaUtil = ((SAPbouiCOM.EditText)(this.GetItem("28_U_E").Specific));
             this._diferenciaEditText = ((SAPbouiCOM.EditText)(this.GetItem("30_U_E").Specific));
+            this.LinkedButton0 = ((SAPbouiCOM.LinkedButton)(this.GetItem("Item_9").Specific));
             this.OnCustomInitialize();
 
         }
@@ -82,7 +86,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
         /// </summary>
         public override void OnInitializeFormEvents()
         {
-            this.DataLoadAfter += new DataLoadAfterHandler(this.Form_DataLoadAfter);
+            this.DataLoadAfter += new SAPbouiCOM.Framework.FormBase.DataLoadAfterHandler(this.Form_DataLoadAfter);
+            this.LoadAfter += new LoadAfterHandler(this.Form_LoadAfter);
 
         }
 
@@ -95,7 +100,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             _infrastructureDomain = FormHelper.GetDomain<InfrastructureDomain>();
             _liquidacionTarjetaDomain = FormHelper.GetDomain<LiquidacionTarjetasDomain>();
             _settingsDomain = FormHelper.GetDomain<SettingsDomain>();
-          
+
             if (UIAPIRawForm.Mode == BoFormMode.fm_ADD_MODE)
             {
                 _zonaRutaCheck.Check();
@@ -148,17 +153,17 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                     int cont = 1;
                     foreach (var item in hojadeRuta.Item2.DetalleZonas)
                     {
-                        if (cont==1)
+                        if (cont == 1)
                         {
                             _zonaDespachoEditText.Value = item.ZonaDespacho;
                             cont++;
                         }
                         else
                         {
-                            _zonaDespachoEditText.Value = _zonaDespachoEditText.Value +"-" + item.ZonaDespacho;
+                            _zonaDespachoEditText.Value = _zonaDespachoEditText.Value + "-" + item.ZonaDespacho;
 
                         }
-                    
+
                     }
 
                     _placaEditText.Value = hojadeRuta.Item2.Placa;
@@ -175,6 +180,12 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 {
                     ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Seleccione una Hoja de ruta valida");
                 }
+            }
+            if (UIAPIRawForm.Mode == BoFormMode.fm_ADD_MODE)
+            {
+
+                _codigoHojaEditText.Value = _liquidacionTarjetaDomain.RetrieveCodigoGenerado();
+
             }
         }
 
@@ -247,7 +258,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                         }
 
                         var totalcargado = 0.00;
-                        var cantidadbultos = 0;
+                        var cantidadbultos = 0.00;
                         foreach (var item in lista)
                         {
                             _guiaMatrix.AddRow();
@@ -283,7 +294,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             {
                 ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Debe seleccionar primero una hoja de ruta");
             }
- 
+
 
         }
 
@@ -314,62 +325,124 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
 
         private void _programarButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            try
+            if (UIAPIRawForm.IsAddMode())
             {
-                UIAPIRawForm.Freeze(true);
-                for (int i = 1; i <= _guiaMatrix.RowCount; i++)
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Primero debe crear la hoja de asignación");
+            }
+            else
+            {
+
+
+                try
                 {
-                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
-                    if (check.Checked)
+
+                    UIAPIRawForm.Freeze(true);
+                    ODLN datosguia = new ODLN();
+                    datosguia.CodigoTransportista = _transportistaEditText.Value;
+                    var transportista = _infrastructureDomain.RetrieveBusinessPartner(_transportistaEditText.Value);
+                    datosguia.NombreTransportista = transportista.CardName;
+                    datosguia.RucTransportista = transportista.LicTradNum;
+                    datosguia.DireccionTransportista = transportista.Addresses.FirstOrDefault().Street;
+                    datosguia.TipoOperacion = "01";
+                    datosguia.MotivoTraslado = "01";
+                    datosguia.LicenciaConductor = transportista.Contact.Where(t=>t.ID==_choferEditText.Value).FirstOrDefault().Licencia ;
+                    datosguia.NombreConductor = _choferEditText.Value;
+                    datosguia.FechaInicioTraslado = _inicioTrasladoRutaEditText.GetDateTimeValue();
+                    datosguia.FEXModalidadTraslado = "02";
+                    datosguia.PlacaVehiculo = _placaEditText.Value;
+                    datosguia.HojaRuta = _hojaRutaEditText.Value;
+                    datosguia.EstadoEnvioSunat = "N";
+
+
+                    for (int i = 1; i <= _guiaMatrix.RowCount; i++)
                     {
-                        ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("Y");
-                        var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
-                        _liquidacionTarjetaDomain.ActualizarProgramado(numeracion, "Y");
+                        var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+                        var cantBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific);
+                        var numguia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific);
+                        if (check.Checked)
+                        {
+                            if (cantBultos.Value.ToDouble() > 0)
+                            {
+                                ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("Y");
+
+                                datosguia.CantidadBultos = cantBultos.Value.ToDouble();
+                                _liquidacionTarjetaDomain.ActualizarProgramado(numguia.Value, "Y", datosguia);
+                            }
+                            else
+                            {
+                                ApplicationInterfaceHelper.ShowErrorStatusBarMessage("No se puede programar la guía " + numguia.Value + " con cantidad de bultos 0");
+                            }
+
+
+                        }
+
                     }
-
+                    if (_crearButton.Caption != "OK")
+                        _crearButton.Item.Click();
                 }
-                if (_crearButton.Caption != "OK")
-                    _crearButton.Item.Click();
+                catch (Exception ex)
+                {
+                    ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
+                }
+                finally
+                {
+                    UIAPIRawForm.Freeze(false);
+                    ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizaron las guías de remisión");
+                }
             }
-            catch (Exception)
-            {
-            }
-            finally
-            {
-                UIAPIRawForm.Freeze(false);
-                ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizaron las guías de remisión");
-            }
-
 
         }
 
         private void _desprogramarButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            try
+            if (UIAPIRawForm.IsAddMode())
             {
-                UIAPIRawForm.Freeze(true);
-                for (int i = 1; i <= _guiaMatrix.RowCount; i++)
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Primero debe crear la hoja de asignación");
+            }
+            else
+            {
+                try
                 {
-                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
-                    if (check.Checked)
+                    ODLN datosguia = new ODLN();
+                    UIAPIRawForm.Freeze(true);
+                    datosguia.CodigoTransportista = "";
+                    var transportista = _infrastructureDomain.RetrieveBusinessPartner(datosguia.CodigoTransportista);
+                    datosguia.NombreTransportista = "";
+                    datosguia.RucTransportista = "";
+                    datosguia.DireccionTransportista = "";
+                    datosguia.TipoOperacion = "";
+                    datosguia.MotivoTraslado = "";
+                    datosguia.LicenciaConductor = "";
+                    datosguia.NombreConductor = "";
+                    datosguia.FechaInicioTraslado = _inicioTrasladoRutaEditText.GetDateTimeValue();
+                    datosguia.FEXModalidadTraslado = "02";
+                    datosguia.PlacaVehiculo = "";
+                    datosguia.HojaRuta = "";
+                    datosguia.EstadoEnvioSunat = "N";
+                    for (int i = 1; i <= _guiaMatrix.RowCount; i++)
                     {
-                        ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
-                        var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
-                        _liquidacionTarjetaDomain.ActualizarProgramado(numeracion, "N");
-                    }
+                        var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+                        if (check.Checked)
+                        {
+                            ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
+                            var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                            _liquidacionTarjetaDomain.ActualizarProgramado(numeracion, "N", datosguia);
+                        }
 
+                    }
+                    if (_crearButton.Caption != "OK")
+                        _crearButton.Item.Click();
                 }
-                if (_crearButton.Caption != "OK")
-                    _crearButton.Item.Click();
+                catch (Exception)
+                {
+                }
+                finally
+                {
+                    UIAPIRawForm.Freeze(false);
+                    ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizaron las guías de remisión");
+                }
             }
-            catch (Exception)
-            {
-            }
-            finally
-            {
-                UIAPIRawForm.Freeze(false);
-                ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizaron las guías de remisión");
-            }
+        
         }
 
         private SAPbouiCOM.DBDataSource _headerDataSource;
@@ -451,9 +524,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
 
             }
             finally
@@ -478,64 +551,108 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             _filtrarButton.Item.Enabled = false;
         }
 
+        static byte[] DecodePdfText(string pdfText)
+        {
+            // Convertir el texto PDF a bytes
+            byte[] pdfBytes = System.Text.Encoding.UTF8.GetBytes(pdfText);
+
+            // Devolver los bytes del PDF decodificado
+            return pdfBytes;
+        }
+
         private void Button3_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
             try
             {
-                UIAPIRawForm.Freeze(true);
+                PrinterSettings printerSettings = new PrinterSettings();
 
-                var odfstream = _liquidacionTarjetaDomain.ObtenerPDF("");
-
-                string myString= odfstream.Item2;
-
-                string pdfText = Encoding.UTF8.GetString(myString.ToByteArray());
-                var sstream = odfstream.Item2.ToMemoryStream();
-
-                var reader = new PdfReader(myString.ToByteArray());
-                using (Document document = new Document())
+                // Verifica si hay una impresora predeterminada configurada
+                var impresoraDefecto = "";
+                if (printerSettings.IsDefaultPrinter)
                 {
-                    // Obtener una instancia de PdfWriter para escribir en el documento
-                    using (PdfWriter writer = PdfWriter.GetInstance(document, new FileStream("salida.pdf", FileMode.Create)))
-                    {
-                        // Abrir el documento
-                        document.Open();
-
-                        // Agregar cada página del PDF original al nuevo documento
-                        for (int i = 1; i <= reader.NumberOfPages; i++)
-                        {
-                            // Obtener la página del PDF original
-                            PdfImportedPage page = writer.GetImportedPage(reader, i);
-
-                            // Agregar la página al nuevo documento
-                            document.Add(Image.GetInstance(page));
-                        }
-
-                        // Cerrar el documento
-                        document.Close();
-                    }
+                    impresoraDefecto = printerSettings.PrinterName;
+                }
+                else
+                {
+                    throw new Exception("No hay una impresora predeterminada configurada.");
                 }
 
-                //for (int i = 1; i <= _guiaMatrix.RowCount; i++)
-                //{
-                //    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
-                //    if (check.Checked)
-                //    {
-                //        ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
-                //        var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
-                //        _liquidacionTarjetaDomain.ActualizarProgramado(numeracion, "N");
-                //    }
 
-                //}
+                UIAPIRawForm.Freeze(true);
+
+                for (int i = 1; i <= _guiaMatrix.RowCount; i++)
+                {
+                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+
+                    if (check.Checked)
+                    {
+                        //((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
+                        var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                        var odfstream = _liquidacionTarjetaDomain.ObtenerPDF(numeracion);
+
+                        if (odfstream.Item1)
+                        {
+                            //// Guardar el PDF decodificado en un archivo temporal
+                            string tempFilePath = Path.GetTempFileName() + ".pdf";
+                            try
+                            {
+                                //File.WriteAllBytes(tempFilePath, odfstream.Item2);
+
+                                Spire.Pdf.PdfDocument pdfdocument = new Spire.Pdf.PdfDocument();
+                                pdfdocument.LoadFromBytes(odfstream.Item2);
+                                //pdf.PrinterName = impresoraDefecto;//printerName;
+                                //pdf.Copies = 2;
+                                //pdfdocument.Print(pdf);
+
+                                pdfdocument.PrintSettings.PrinterName = impresoraDefecto;//printerName;              
+                                pdfdocument.PrintSettings.Copies = 2;
+                                pdfdocument.Print();
+                                pdfdocument.Dispose();
+
+                                //// Abrir el archivo PDF en el navegador predeterminado
+                                //Process.Start(tempFilePath);
+                            }
+                            catch (Exception ex)
+                            {
+                                ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Error al obtener PDF del documento: " + numeracion);
+                            }
+
+                        }
+                        else
+                        {
+                            ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Error al obtener PDF del documento: " + numeracion);
+                        }
+
+                    }
+
+
+                }
+
 
             }
             catch (Exception ex)
             {
-                var x = ex.Message;
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message); 
             }
             finally
             {
                 UIAPIRawForm.Freeze(false);
-                ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se terminó el procesp");
+                ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se terminó el proces");
+            }
+
+        }
+
+        private LinkedButton LinkedButton0;
+
+        private void Form_LoadAfter(SBOItemEventArg pVal)
+        {
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
             }
 
         }

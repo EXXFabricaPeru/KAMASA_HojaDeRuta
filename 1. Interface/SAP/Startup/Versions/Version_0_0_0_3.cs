@@ -16,21 +16,12 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup.Versions
 
         protected override void InitializeTables()
         {
-            //CreateObject(typeof(OLTR));
-            //CreateObject(typeof(OMAJ));
-            //CreateObject(typeof(OPCG));
-            //SyncSystemTable(typeof(OACT));
-            //SyncSystemTable(typeof(ORCT));
-            //CreateObject(typeof(OPAP));
+            CreateTable(typeof(OPDS));
 
         }
         protected override void InitializeFormattedSearch()
         {
-            //CreateFormattedSearch<ComisionTarjetasQueryManager, OPCG>(query => query.VS_LT_BUSCAPASARELA, udo => udo.Pasarela);
-            //CreateFormattedSearch<ComisionTarjetasQueryManager, OPAP>(query => query.VS_LT_BUSCACUENTAPASARELA, udo => udo.Cuenta);
-            //CreateFormattedSearch<ComisionTarjetasQueryManager, OPAP>(query => query.VS_LT_BUSCAMONEDA, udo => udo.Moneda);
-            //CreateFormattedSearch<ComisionTarjetasQueryManager, OLTR>(query => query.VS_LT_BUSCATIENDAS, udo => udo.CodigoTienda);
-            //CreateFormattedSearch<ComisionTarjetasQueryManager, OLTR>(query => query.VS_LT_CUENTA_BANCO, udo => udo.CuentaContable);
+
 
         }
     }

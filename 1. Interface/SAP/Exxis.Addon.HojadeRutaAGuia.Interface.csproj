@@ -372,16 +372,6 @@
     <Compile Include="Views\UserObjectViews\HojaRutaAsignacion.b1f.cs">
       <DependentUpon>HojaRutaAsignacion.b1f</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserObjectViews\LiquidacionTarjeta.b1f.cs">
-      <DependentUpon>LiquidacionTarjeta.b1f</DependentUpon>
-    </Compile>
-    <Compile Include="Views\UserObjectViews\LiquidacionTarjeta_Mtx.cs" />
-    <Compile Include="Views\UserObjectViews\Motivos de Ajustes.b1f.cs">
-      <DependentUpon>Motivos de Ajustes.b1f</DependentUpon>
-    </Compile>
-    <Compile Include="Views\UserObjectViews\PlantillaCarga.b1f.cs">
-      <DependentUpon>PlantillaCarga.b1f</DependentUpon>
-    </Compile>
     <Compile Include="Views\UserViews\ReporteLiquidacion.b1f.cs">
       <DependentUpon>ReporteLiquidacion.b1f</DependentUpon>
     </Compile>
@@ -417,15 +407,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Views\UserObjectViews\HojaRutaAsignacion.b1f">
-      <FormCategory>UDOForm</FormCategory>
-    </None>
-    <None Include="Views\UserObjectViews\LiquidacionTarjeta.b1f">
-      <FormCategory>UDOForm</FormCategory>
-    </None>
-    <None Include="Views\UserObjectViews\Motivos de Ajustes.b1f">
-      <FormCategory>UserForm</FormCategory>
-    </None>
-    <None Include="Views\UserObjectViews\PlantillaCarga.b1f">
       <FormCategory>UDOForm</FormCategory>
     </None>
     <None Include="Views\UserViews\ReporteLiquidacion.b1f">

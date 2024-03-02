@@ -82,13 +82,21 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Models
         [SAPColumn("GroupNum")]
         public int CondicionPago { get; set; }
 
- 
+
+        [SAPColumn("Indicator")]
+        public string Indicator { get; set; }
+
+
+        [SAPColumn("BPLId")]
+        public int BranchId { get; set; }
+
+
 
         [SAPColumn(@"U_EXX_FE_GRPESOTOTAL", false)]
         public string Peso { get; set; }
 
         [SAPColumn(@"U_EXK_CANTBULTO", false)]
-        public int CantidadBultos { get; set; }
+        public double CantidadBultos { get; set; }
 
         [SAPColumn("U_EXK_HRPROG", false)]
         //[FieldNoRelated("U_EXK_HRPROG", "Programado Guía", BoDbTypes.Alpha, Size = 12)]
@@ -98,6 +106,12 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Models
         //[FieldNoRelated("U_EXK_HRPROG", "Programado Guía", BoDbTypes.Alpha, Size = 12)]
         public string EstadoSUNAT { get; set; }
 
+        [SAPColumn("U_EXX_HOAS_STAD", false)]
+        [FieldNoRelated("U_EXX_HOAS_STAD", "Estado Envío Sunat", BoDbTypes.Alpha, Size = 2,Default ="A")]
+        [Val("A", "Sin Asignar")]
+        [Val("N", "NO")]
+        [Val("Y", "SI")]
+        public string EstadoEnvioSunat { get; set; }
         public bool isFR { get; set; }
 
         public int CompareTo(object obj)
@@ -135,60 +149,77 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Models
 
 
 
-        [SAPColumn("U_VS_MOTTRAS", false)]
+        [SAPColumn("U_EXX_MOTIVTRA", false)]
         public string MotivoTraslado { get; set; }
 
-        [SAPColumn("U_VS_BULPAL", false)]
+        //[SAPColumn("U_VS_BULPAL", false)]
         public int NumeroBultosPallets { get; set; }
 
-        public DateTime FechaInicioTraslado { get; set; }
 
-        [SAPColumn("U_VS_GLNPART", false)]
+        //[SAPColumn("U_VS_GLNPART", false)]
         public string UbigeoPuntoPartida { get; set; }
-        [SAPColumn("U_VS_DIRPART", false)]
+        //[SAPColumn("U_VS_DIRPART", false)]
         public string DirecciónPuntoPartida { get; set; }
-        [SAPColumn("U_VS_GLNLLEG", false)]
+        //[SAPColumn("U_VS_GLNLLEG", false)]
         public string UbigeoPuntoLlegada { get; set; }
 
-        [SAPColumn("U_VS_DIRLLEG", false)]
+        //[SAPColumn("U_VS_DIRLLEG", false)]
         public string DireccionPuntoLlegada { get; set; }
 
 
-        [SAPColumn("U_VS_MODTRA", false)]
+        //[SAPColumn("U_VS_MODTRA", false)]
         public string ModalidadTraslado { get; set; }
-        [SAPColumn("U_VS_CODTCOND", false)]
+        //[SAPColumn("U_VS_CODTCOND", false)]
         public string TipoDocumentoConductor { get; set; }
-        [SAPColumn("U_VS_DOCCOND", false)]
+        //[SAPColumn("U_VS_DOCCOND", false)]
         public string DocumentoConductor { get; set; }
-        [SAPColumn("U_BPP_MDFN", false)]
+
+        [SAPColumn("U_EXX_NOMCONDU", false)]
         public string NombreConductor { get; set; }
-        [SAPColumn("U_BPP_MDFC", false)]
+
+        [SAPColumn("U_EXX_LICCONDU", false)]
         public string LicenciaConductor { get; set; }
-        [SAPColumn("U_BPP_MDVC", false)]
+
+        [SAPColumn("U_EXX_PLACAVEH", false)]
         public string PlacaVehiculo { get; set; }
-        [SAPColumn("U_BPP_MDVN", false)]
+
+        //[SAPColumn("U_BPP_MDVN", false)]
         public string MarcaVehiculo { get; set; }
-        [SAPColumn("U_BPP_MDCT", false)]
+
+        [SAPColumn("U_EXX_CODTRANS", false)]
         public string CodigoTransportista { get; set; }
-        [SAPColumn("U_BPP_MDRT", false)]
+
+        [SAPColumn("U_EXX_RUCTRANS", false)]
         public string RucTransportista { get; set; }
-        [SAPColumn("U_BPP_MDNT", false)]
+
+        [SAPColumn("U_EXX_NOMTRANS", false)]
         public string NombreTransportista { get; set; }
 
-        [SAPColumn("U_BPP_MDDT", false)]
+        [SAPColumn("U_EXX_DIRTRANS", false)]
         public string DireccionTransportista { get; set; }
 
-        public string IndTrasladoTotalDAMoDS { get; set; }
-        public string INdVehiculoCondictoresTransp { get; set; }
-        public string IndRetornoVehiculoVacio { get; set; }
-        public string IndRetornoVehiculoEnvaseVacio { get; set; }
-        public string IndTrasladoVehiculoM1L { get; set; }
-        public string IndTransbordoProgramado { get; set; }
+        [SAPColumn("U_EXX_TIPOOPER", false)]
+        public string TipoOperacion { get; set; }
 
-        [SAPColumn("U_VS_NROMTC", false)]
+        [SAPColumn("U_EXX_FE_MODTRA", false)]
+        public string FEXModalidadTraslado { get; set; }
+
+        [SAPColumn("U_EXX_FE_GR_FEEntrega", false)]
+        public DateTime FechaGuia { get; set; }
+
+        [SAPColumn("U_EXX_FE_GR_FInicio", false)]
+        public DateTime FechaInicioTraslado { get; set; }
+
+        [SAPColumn("U_EXK_HOJARUTA", false)]
+        public string HojaRuta { get; set; }
+
+
+
+
+        //[SAPColumn("U_VS_NROMTC", false)]
         public string NroRegistroMTC { get; set; }
 
-        [SAPColumn("U_VS_TARUNI", false)]
+        //[SAPColumn("U_VS_TARUNI", false)]
         public string TarjetaUnicaCirculacion { get; set; }
 
         public int ReferencedObjectType { get; set; }

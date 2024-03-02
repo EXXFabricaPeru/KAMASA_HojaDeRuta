@@ -19,7 +19,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header
     [UserDefinedTable(ID, DESCRIPTION)]
     public class OPDS : BaseUDO
     {
-        public const string ID = "VS_LT_OPDS";
+        public const string ID = "EXX_HOAS_OPDS";
         public const string DESCRIPTION = "Configuración";
 
         [EnhancedColumn(0), ColumnProperty("Code", ColumnName = "Código")]
@@ -28,11 +28,11 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header
         [EnhancedColumn(1), ColumnProperty("Name", ColumnName = "Descripción")]
         public string Name { get; set; }
 
-        [EnhancedColumn(2), FieldNoRelated("U_VS_LT_CTIP", "Tipo", BoDbTypes.Alpha, Size = 2)]
+        [EnhancedColumn(2), FieldNoRelated("U_EXX_HOAS_CTIP", "Tipo", BoDbTypes.Alpha, Size = 2)]
         [Val("ST", "Alfabético"), Val("IN", "Entero"), Val("DE", "Decimal"), Val("DH", "Fecha y Hora"), Val("HR", "Hora")]
         public string ValueType { get; set; }
 
-        [EnhancedColumn(3), FieldNoRelated("U_VS_LT_CVAL", "Valor", BoDbTypes.Alpha, Size = 254)]
+        [EnhancedColumn(3), FieldNoRelated("U_EXX_HOAS_CVAL", "Valor", BoDbTypes.Alpha, Size = 254)]
         public string Value { get; set; }
 
         public static class ValueTypes
@@ -45,6 +45,11 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header
 
         public static class Codes
         {
+            public const string DBUSER = "DBUSER";
+            public const string DBPASS = "DBPASS";
+            public const string SERVER = "SERVER";
+
+
             public const string IP_SERVICE_LAYER = "IPS_SL";
             public const string STORES_EXCLUDES = "TIE_EX";
             public const string ACCOUNT_COMISION = "COM_CT";

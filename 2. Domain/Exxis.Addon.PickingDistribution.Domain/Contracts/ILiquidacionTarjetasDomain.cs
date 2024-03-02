@@ -38,10 +38,11 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain.Contracts
         Tuple<bool, OHOJ> RetrieveHojaRuta(string value);
         Tuple<bool, List<ODLN>> RetrieveGuiasHoja(string value1, string value2, string value3, string v);
         string RetrieveCodigoGenerado();
-        void ActualizarProgramado(string numeracion, string estado);
+        void ActualizarProgramado(string numeracion, string estado, ODLN datosguia);
         void ActualizarEnvioSunat(string sunat);
         void ActualizarEstadoHojaGuia(string estado, string codigo);
         Tuple<bool, string> GetCargaUtilByPlaca(string placa);
-        Tuple<bool, string> ObtenerPDF(string numeracion);
+        Tuple<bool, byte[]> ObtenerPDF(string numeracion);
+        //Tuple<bool,CrossCutting.Model.System.Header.OCRD> retrieveTransportista(string code);
     }
 }

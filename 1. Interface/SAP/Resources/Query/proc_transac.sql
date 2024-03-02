@@ -1,280 +1,510 @@
-ALTER PROCEDURE "bpvs_PD_TN_OP_OrdenVenta_17"(
-	IN Id int,
-	IN Transaction_Type nchar(1),
-	IN Object_Type nvarchar(20),
-	OUT Mensaje_Error nvarchar(256)
+
+if (:object_type = '15'  AND (:transaction_type = 'A' OR :transaction_type = 'U') and IFNULL(:error,0)=0) 
+THEN
+
+		select "U_EXX_HOAS_STAD" INTO estadoSUNAT 	FROM ODLN T0 
+										where T0."DocEntry"=:list_of_cols_val_tab_del ;
+		 IF(:estadoSUNAT='A')THEN
+		 	error := 1000;
+			error_message := N'No puede crear la guía con el campo Estado Envío Sunat: Sin Asignar';
+		END IF;							
+
+
+END IF;
+
+ALTER PROCEDURE "SP_EXXIS_FE_FOLIOS"
+(
+	IN DocEntry NVARCHAR(255),
+	IN ObjectType NVARCHAR(20),
+	IN DocSubType NVARCHAR(20),
+	IN CodigoSunat NVARCHAR(20),
+	IN BranchId int
 )
-AS
+
+-- =============================================
+-- Autor					: RENZO PIZARRO
+-- Fecha Creación			: 06/02/2019
+-- Fecha de modificación 	: 30/04/2019
+-- Nombre SP				: "SP_EXXIS_FE_FOLIOS"
+-- Objetos involucrados		: 13,14,46,203
+-- Descripción				: Asigna folios a documentos y gatilla acción
+-- Modificación				: Soporte indicador Guías
+-- =============================================
+LANGUAGE SQLSCRIPT AS
 BEGIN
 
-	--> Variable de retorno de mensaje de error
-	--DECLARE Mensaje_Error	nvarchar(256);
+DECLARE BD VARCHAR(100);
+DECLARE BDFEX VARCHAR(100);
+DECLARE Code NVARCHAR(50);
+DECLARE SeriesName NVARCHAR(20);
+DECLARE Series INTEGER;
+DECLARE Folio INTEGER;
+DECLARE DocNum INTEGER;
+DECLARE FolioPref NVARCHAR(4);--revisar largo de campo de la versión 882
+DECLARE IdFexCompany int;
+DECLARE Estado NVARCHAR(3);
+DECLARE Indicador NVARCHAR(10);
+DECLARE RUC NVARCHAR(11);
+DECLARE Contingencia NVARCHAR(1);
+DECLARE FolioContingencia INTEGER;
+DECLARE TipoDocContingencia NVARCHAR(3);
+DECLARE EstadoEnvioSUNAT NVARCHAR(3);
+
+--- Folio desde servicios
+Declare Folia int; -- 1 (si) 0(no)
+
+-- Asignación de Variables:
+SELECT CURRENT_SCHEMA INTO BD FROM DUMMY;
+SELECT TOP 1 "U_FE_dbFexName" INTO BDFEX FROM "@EXX_FE_BASE";
+SELECT IFNULL(LEFT("TaxIdNum",11),'0') INTO RUC FROM OADM;
+Series := 0;
+Indicador := '';
+DocNum := 0;
+Estado := '-';
+FolioPref := '';
+Folio := 0;
+Code :='';
+SeriesName :='';
+Contingencia :='N';
+TipoDocContingencia := '';
+EstadoEnvioSUNAT:='';
+
+--Set Parametros para Multicompany
+SELECT 
+IFNULL(
+(SELECT "IdFexCompany" FROM "FEX_PE".FEX_COMPANY WHERE "dbName"=:BD AND IFNULL("BranchID",-1) = IFNULL(:BranchId,-1))
+,0) INTO IdFexCompany FROM DUMMY;
 
 
-	DECLARE ValDistribution	NCHAR(1);
-	DECLARE SerieGuia	nvarchar(100);
-	DECLARE SerieVenta	nvarchar(100);
-	
-	DECLARE cont			int;
-	DECLARE linea			int;
-	DECLARE NumAtCard		nvarchar(100);
-	DECLARE TipPersona		nvarchar(3);
-	DECLARE NroDocId		nvarchar(32);
-	DECLARE TipDocId		nvarchar(1);
-	DECLARE Serie			nvarchar(20);
-	DECLARE Correlativo		nvarchar(20);
-	DECLARE CardCode		nvarchar(20);
-	DECLARE TipoDocumento	nvarchar(2);
-	DECLARE Anulada			NVARCHAR(1);
-	DECLARE U_BPV_SERI		nVarchar(10);
-	DECLARE U_BPP_MDTD		nVarchar(20);
-	DECLARE U_BPP_MDSD		nVarChar(5);
-	DECLARE U_BPP_MDCD		nVarchar(20);
-	Declare U_BPP_MDTO		nVarChar(2);
-	Declare U_BPP_MDSO		nVarChar(5);
-	Declare U_BPP_MDCO		nVarChar(20);
-	DECLARE U_BPP_SDocDate 	DateTime;
-	DECLARE U_VS_SDocTotal 	numeric(19,6);
-	DECLARE U_VS_TDOCORG	INT;
-	DECLARE U_VS_DOCORG		INT;
-	DECLARE NombreSN		nvarchar(100);
-	DECLARE ComentariosAsiento nvarchar(50);
-	DECLARE Tipomoneda		nvarchar(1);
-	DECLARE UsarReservado	nVarchar(1);
-	DECLARE Monedacabecera 	nvarchar(3);
-	DECLARE Monedalineas	nvarchar(3);
-	DECLARE DocType			nvarchar(1);
-	DECLARE DocSubType		nvarchar(3);
-	DECLARE E_Serie			char(1);
-	DECLARE FE_Estado		char(1);
-	DECLARE Cancelado		NCHAR(1);
-	DECLARE Motivo			NVARCHAR(30);
-	DECLARE Sustento		VARCHAR(100);
-	DECLARE E_Mail			nvarchar(100);
-	DECLARE U_VS_NOMCOM		NVARCHAR(50);
-	DECLARE U_VS_GRATEN		nVarChar(1);
-	DECLARE Ubigeo			INT;
-	DECLARE Descuento		INT;
-	--> Variables de validación
-	DECLARE Canal			NVARCHAR(3);
-	DECLARE Activado		CHAR(1);
-	DECLARE Mensaje			NVARCHAR(250);
-	DECLARE DataSource		char(1);
-	DECLARE V1				NVARCHAR(15);
-	-->Detracciones
-	DECLARE AfectDetracc	NCHAR(1);
-	DECLARE PorcenDetracc	DECIMAL(19,6);
-	DECLARE PorcMaxDetracc	DECIMAL(19,6);
-	DECLARE CantCuotas		INT;
-	DECLARE Mpago			NVARCHAR(3);
-	DECLARE TipoFactura		NVARCHAR(5);
-	DECLARE U_VS_MTRCL	 	varchar(15);
-	DECLARE U_VS_NMEMB		varchar(50);
-	DECLARE U_VS_DESESPC	varchar(100);	
-	DECLARE U_VS_LGDESC	 	varchar(200);
-	DECLARE U_VS_FECDESC	date;
-	DECLARE U_VS_CNESPC	 	INT;
-	
-	DECLARE U_CL_CANAL			NVARCHAR(3);
+--- folio desde servicios
+	Folia := 0;
+	--Set Parametros para Multicompany
+	SELECT 
+	IFNULL(
+	(Select "Valor" from FEX_PE.FEX_VARIABLES where "IdFexCompany" = :IdFexCompany and "Codigo" = 'ASIGNA_FOLIOS')
+	,0) INTO Folia FROM DUMMY;
 	
 	
-	
-	DECLARE BASETYPE		NVARCHAR(3);
-	
-	-->Anticipo
-	DECLARE AplicaAnticipo	NCHAR(1);
-	-->Aux
-	DECLARE var1			INT;
-	DECLARE var2			INT;
-	DECLARE filasAnticipos	INT;
-	-->Portal
-	DECLARE U_VS_SERSUNAT	NCHAR(1);
-	DECLARE U_VS_PORTSUNAT	NCHAR(1);
-	DECLARE anexos			INT;
-	DECLARE MYCOND CONDITION;	
-	DECLARE EXIT HANDLER FOR MYCOND BEGIN END;
-	
-	DECLARE EXIT HANDLER FOR SQL_ERROR_CODE 1299
-	SELECT ::SQL_ERROR_CODE , '' into Cont, Mensaje_Error FROM DUMMY;
-	
-	--> Asignación de valor  		
-	IF LOCATE('|A|U|','|' || :Transaction_Type || '|')>0
-	THEN	
-		SELECT
-				'Y',
-				0,
-				T0."CardCode",
-				IFNULL(T0."NumAtCard",''),
-				RIGHT(IFNULL(T0."U_BPV_SERI",''),2),
-				LEFT(IFNULL(T0."U_BPV_SERI",''),
-				CASE WHEN LOCATE (IFNULL(T0."U_BPV_SERI",''),'-') = 0 THEN 0 ELSE LOCATE (IFNULL(T0."U_BPV_SERI",''),'-')-1 END),
-				IFNULL(T0."U_BPV_NCON2",''),
-				REPLACE(LEFT(IFNULL(T0."CardName",''),50),'&',''),
-				REPLACE(IFNULL(T0."JrnlMemo",''),'&',''),
-				IFNULL(T0."CurSource",''),
-				IFNULL(T0."U_OK1_Anulada",'N'),
-				IFNULL(T0."LicTradNum",''),
-				IFNULL(T0."U_BPP_MDCD",''),
-				IFNULL(T0."U_BPP_MDTD",''),
-				IFNULL(T0."U_BPP_MDSD",''),
-				IFNULL(T0."U_BPV_SERI",''),
-				IFNULL(T0."U_BPP_MDTO",''),
-				IFNULL(T0."U_BPP_MDCO",''),
-				IFNULL(T0."U_BPP_MDSO",''),
-				IFNULL(T0."U_BPP_SDOCDATE",'1'),
-				IFNULL(T0."U_VS_SDOCTOTAL",0),
-				IFNULL(T0."U_VS_TDOCORG",'13'),
-				IFNULL(T0."U_VS_DOCORG",0),
-				IFNULL(T0."DocCur",''),
-				T0."DocType",
-				IFNULL(T0."U_VS_USRSV",''),
-				T0."DocSubType",
-				T0."DataSource",
-				IFNULL(T0."U_VS_AFEDET",'N'),
-				IFNULL(T0."U_VS_PORDET",0),
-				T0."Installmnt",
-				IFNULL(T0."U_VS_APLANT",'N'),
-				'',
-				IFNULL(T0."U_VS_FESTAT",''),
-				IFNULL(T1."U_BPP_BPTD",''),
-				IFNULL(T1."U_BPP_BPTP",''),
-				T0."CANCELED",
-				IFNULL(T0."U_VS_MOTEMI",''),
-				IFNULL(T0."U_VS_SUSTNT",''),
-				IFNULL(T1."E_Mail",''),
-				IFNULL(T1."U_VS_NOMCOM",''),
-				IFNULL(T0."U_VS_GRATEN",''),
-				'',--IFNULL(T2."U_VS_SERSUNAT",''),
-				IFNULL(T0."U_VS_PORTSUNAT",''),
-				IFNULL(T0."U_VS_MPAGO",''),
-				IFNULL(T0."U_VS_TIPO_FACT",''),
-				IFNULL(T0."U_VS_MTRCL",''),	
-				IFNULL(T0."U_VS_NMEMB",''),	
-				IFNULL(T0."U_VS_DESESPC",''),
-				IFNULL(T0."U_VS_LGDESC",''),
-				IFNULL(T0."U_VS_FECDESC",''),
-				IFNULL(T0."U_VS_CNESPC",0),
-				IFNULL(T0."U_EXK_VALD",''),
-				IFNULL(T0."U_EXK_SRGR",''),
-				IFNULL(T0."U_EXK_SRVT",''),
-				IFNULL(T0."U_CL_CANAL",'')
-				
-			INTO
-				Activado			
-				,linea 				
-				,CardCode  			
-				,NumAtCard 			
-				,TipoDocumento 		
-				,Serie 				
-				,Correlativo 		
-				,NombreSN 			
-				,ComentariosAsiento 	
-				,Tipomoneda 			
-				,Anulada 			
-				,NroDocId 			
-				,U_BPP_MDCD 			
-				,U_BPP_MDTD 			
-				,U_BPP_MDSD 			
-				,U_BPV_SERI 			
-				,U_BPP_MDTO 			
-				,U_BPP_MDCO 			
-				,U_BPP_MDSO 			
-				,U_BPP_SDocDate 		
-				,U_VS_SDocTotal 		
-				,U_VS_TDOCORG		
-				,U_VS_DOCORG			
-				,Monedacabecera 		
-				,DocType 			
-				,UsarReservado 		
-				,DocSubType 			
-				,DataSource			
-				,AfectDetracc		
-				,PorcenDetracc		
-				,CantCuotas			
-				,AplicaAnticipo		
-				,E_Serie				
-				,FE_Estado			
-				,TipDocId			
-				,TipPersona			
-				,Cancelado			
-				,Motivo				
-				,Sustento			
-				,E_Mail				
-				,U_VS_NOMCOM			
-				,U_VS_GRATEN
-				,U_VS_SERSUNAT
-				,U_VS_PORTSUNAT
-				,Mpago
-				,TipoFactura
-				,U_VS_MTRCL	 
-				,U_VS_NMEMB	
-				,U_VS_DESESPC
-				,U_VS_LGDESC	 
-				,U_VS_FECDESC
-				,U_VS_CNESPC
-				,ValDistribution
-				,SerieGuia
-				,SerieVenta
-				,U_CL_CANAL
+--FACTURAS, BOLETAS, FACTURAS DE RESERVA y NOTAS DE DEBITO        
+IF (:ObjectType = '13') THEN
+	SELECT "Series", "Indicator", "DocNum",IFNULL("U_EXX_FE_Estado",'-'), "U_EXX_FE_FOLIOCONT"
+	INTO Series,Indicador,DocNum,Estado, FolioContingencia
+	FROM OINV WHERE "DocEntry"= :DocEntry;
 
-			
-		FROM "ORDR" T0 INNER JOIN "OCRD" T1 ON T0."CardCode" = T1."CardCode"
-		WHERE T0."DocEntry" = :Id;
-					
-		--> Canal
-		SELECT CASE :DataSource
-				WHEN 'I' THEN 'SB1' 
-				WHEN 'N' THEN 'SB1' 
-				WHEN 'O' THEN 'SDK' 
-			   ELSE 'NNN' END
-		INTO Canal
-		FROM DUMMY;
-		
-		
+	SELECT "FolioPref",LEFT("SeriesName",4), IFNULL("U_FE_Contingencia", 'N'), "U_FE_TipoDocumento"
+	INTO FolioPref,SeriesName, Contingencia, TipoDocContingencia
+	FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
 	
---> VALIDACIONES		
-----------------------------------------------------------------------------------------------------------------------------------------------------------		
-			
+	SELECT IFNULL((SELECT TOP 1("Code") FROM "@EXX_FE_FOLIO_LIB" WHERE "U_FE_Series"=:Series),0)
+	 INTO Code FROM DUMMY;
 
-					IF (:ValDistribution='Y')
-					THEN
-						IF (:Transaction_Type='A')
-						THEN
-							update "ORDR"
-							set "U_EXK_OTRF"=null,"U_EXK_HDST"=null,"U_EXK_VRDS"=null
-							,"U_EXK_VMDS"=null,"U_EXK_VSDS"='NV',"U_EXK_VPTO"='NV'
-							,"U_EXK_VPTR"=null,"U_EXK_VPTC"=null,"U_EXK_STDS"=null
-							where "DocEntry"=:Id;
-						END IF;
-					
-					
-						IF (:SerieGuia='')
-						THEN
-							Mensaje_Error := 'Debe colocar la serie de guía para el flujo de distribución';
-							SIGNAL MYCOND;	
-						END IF;	
-						
-						IF (:U_CL_CANAL='' or  :U_CL_CANAL='0')
-						THEN
-							Mensaje_Error := 'Debe colocar el canal de venta para el flujo de distribución';
-							SIGNAL MYCOND;	
-						END IF;
-						/*IF (:SerieVenta='')
-						THEN
-							Mensaje_Error := :Mensaje;
-							SIGNAL MYCOND;	
-						END IF;					
-				*/
-					END IF;
-			
-				
-----------------------------------------------------------------------------------------------------------------------------------------------------------
+	IF (:Code=0) THEN
+		IF (:Contingencia = 'Y') THEN
+			Folio := :FolioContingencia;
+		ELSE
+			SELECT IFNULL("NextFolio", 1) INTO Folio
+			FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+		END IF;	
+	ELSE 
+		SELECT "U_FE_FolioNum" INTO Folio FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+		DELETE FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+	END IF;	
 
+	IF (:Estado) !='-' THEN
+		UPDATE OINV
+		SET "U_EXX_FE_Estado" = 'NEN'
+		WHERE "DocEntry"=:DocEntry;
+	END IF;
+	
+	UPDATE OINV
+	SET
+		"FolioNum"=:Folio,
+		"FolioPref"=:FolioPref,
+		"Printed"='Y',
+		"U_EXX_FE_TIPCOM"=:CodigoSunat,
+		"U_EXX_FE_ClaAcc"= :RUC||'-'||:Indicador||'-'||:SeriesName||'-'||CAST(:Folio AS NVARCHAR)
+	WHERE
+		"DocEntry"= :DocEntry;
 
+	--FACTURA Y BOLETA DE ANTICIPO
+ELSEIF (:ObjectType = '203') THEN
 
+	SELECT "Series", "Indicator", "DocNum",IFNULL("U_EXX_FE_Estado",'-'), "U_EXX_FE_FOLIOCONT"
+	INTO Series,Indicador,DocNum,Estado, FolioContingencia
+	FROM ODPI WHERE "DocEntry"= :DocEntry;
 
-					
-			
+	SELECT "FolioPref",LEFT("SeriesName",4), IFNULL("U_FE_Contingencia", 'N'), "U_FE_TipoDocumento"
+	INTO FolioPref, SeriesName, Contingencia, TipoDocContingencia
+	FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	
+	SELECT IFNULL((SELECT TOP 1("Code") FROM "@EXX_FE_FOLIO_LIB" WHERE "U_FE_Series"=:Series),0) INTO Code FROM DUMMY;
+
+	IF (:Code=0) THEN
+		IF (:Contingencia = 'Y') THEN
+			Folio := :FolioContingencia;
+		ELSE
+			SELECT IFNULL("NextFolio", 1) INTO Folio
+			FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+		END IF;	
+	ELSE 
+		SELECT "U_FE_FolioNum" INTO Folio FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+		DELETE FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+	END IF;	
+	
+	IF (:Estado) !='-' THEN
+		UPDATE ODPI
+		SET "U_EXX_FE_Estado" = 'NEN'
+		WHERE "DocEntry"=:DocEntry ;
 	END IF;
 
+	UPDATE ODPI
+	SET
+		"FolioNum"=:Folio,
+		"FolioPref"=:FolioPref,
+		"Printed"='Y',
+		"U_EXX_FE_TIPCOM"=:CodigoSunat,
+		"U_EXX_FE_ClaAcc"=:RUC||'-'||:Indicador||'-'||:SeriesName||'-'||CAST(:Folio AS NVARCHAR)
+	WHERE
+		"DocEntry"= :DocEntry;
+	
+--NOTA DE CRÉDITO
+ELSEIF (:ObjectType = '14') THEN
+
+	SELECT "Series", "Indicator", "DocNum",IFNULL("U_EXX_FE_Estado",'-'), "U_EXX_FE_FOLIOCONT"
+	INTO Series,Indicador, DocNum, Estado, FolioContingencia
+	FROM ORIN WHERE "DocEntry"= :DocEntry;
+
+	SELECT "FolioPref",LEFT("SeriesName",4), IFNULL("U_FE_Contingencia", 'N'), "U_FE_TipoDocumento"
+	INTO FolioPref,SeriesName, Contingencia, TipoDocContingencia
+	FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	
+	SELECT IFNULL((SELECT TOP 1("Code") FROM "@EXX_FE_FOLIO_LIB" WHERE "U_FE_Series"=:Series),0) INTO Code FROM DUMMY;
+
+	IF (:Code=0) THEN
+		IF (:Contingencia = 'Y') THEN
+			Folio := :FolioContingencia;
+		ELSE
+			SELECT IFNULL("NextFolio", 1) INTO Folio
+			FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+		END IF;	
+	ELSE 
+		SELECT "U_FE_FolioNum" INTO Folio FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+		DELETE FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+	END IF;	
+	
+	IF (:Estado) !='-' THEN
+		UPDATE ORIN
+		SET "U_EXX_FE_Estado" = 'NEN'
+		WHERE "DocEntry"=:DocEntry;
+	END IF;
+
+	UPDATE ORIN
+	SET
+		"FolioNum"=:Folio,
+		"FolioPref"=:FolioPref,
+		"Printed"='Y',
+		"U_EXX_FE_TIPCOM"=:CodigoSunat,
+		"U_EXX_FE_ClaAcc"=:RUC||'-'||:Indicador||'-'||:SeriesName||'-'||CAST(:Folio AS NVARCHAR)
+	WHERE
+		"DocEntry"= :DocEntry;
+
+-- CRE
+ELSEIF (:ObjectType = '46') THEN
+
+	SELECT "Series", "DocNum", IFNULL("U_EXX_FE_Estado",'-'),IFNULL("U_EXX_SERIECER",''),TO_INT(IFNULL("U_EXX_CORRECER",0)), "U_EXX_FE_FOLIOCONT"
+	INTO Series,DocNum, Estado,FolioPref,Folio,FolioContingencia
+	FROM OVPM WHERE "DocEntry"= :DocEntry;
+	
+	SELECT IFNULL("NextFolio", 1), IFNULL("U_FE_Contingencia", 'N') INTO Folio, Contingencia
+	FROM NNM1 WHERE "Series" =:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';         
+											
+	IF (:FolioPref='') THEN
+		SELECT LEFT("SeriesName",4) INTO FolioPref FROM OVPM INNER JOIN NNM1 ON OVPM."Series"=NNM1."Series"
+		WHERE OVPM."DocEntry"= :DocEntry AND NNM1."U_FE_TipoEmision" ='FE';   
+		
+		Code  = 0;	
+	    	
+	END IF;
+    
+    IF (:Contingencia = 'Y') THEN
+    	Folio := :FolioContingencia;
+    ELSE
+		SELECT IFNULL("NextFolio", 1) INTO Folio
+		FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	END IF;
+		
+    IF (:Estado) !='-' THEN
+			UPDATE OVPM
+			SET
+				"U_EXX_FE_Estado" = 'NEN',
+				"U_EXX_CORRECER"=TO_VARCHAR(:Folio),
+				"U_EXX_SERIECER"=:FolioPref,
+				"U_EXX_FE_TIPCOM" = :CodigoSunat
+
+			WHERE
+				"DocEntry"= :DocEntry;
+	END IF;
+	
+    
+ -- CPE
+ELSEIF (:ObjectType = '24') THEN
+
+	SELECT "Series", "DocNum", IFNULL("U_EXX_FE_Estado",'-'),IFNULL("U_EXX_SERIEPER",''),TO_INT(IFNULL("U_EXX_CORREPER",0)), "U_EXX_FE_FOLIOCONT"
+	INTO Series,DocNum, Estado,FolioPref,Folio,FolioContingencia
+	FROM ORCT WHERE "DocEntry"= :DocEntry;
+	
+	SELECT IFNULL("NextFolio", 1), IFNULL("U_FE_Contingencia", 'N') INTO Folio, Contingencia
+	FROM NNM1 WHERE "Series" =:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';         
+											
+	IF (:FolioPref='') THEN
+		SELECT LEFT("SeriesName",4) INTO FolioPref FROM ORCT INNER JOIN NNM1 ON ORCT."Series"=NNM1."Series"
+		WHERE ORCT."DocEntry"= :DocEntry AND NNM1."U_FE_TipoEmision" ='FE';   
+		
+		Code  = 0;	
+	    	
+	END IF;
+    
+    IF (:Contingencia = 'Y') THEN
+    	Folio := :FolioContingencia;
+    ELSE
+		SELECT IFNULL("NextFolio", 1) INTO Folio
+		FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	END IF;
+		
+    IF (:Estado) !='-' THEN
+			UPDATE ORCT
+			SET
+				"U_EXX_FE_Estado" = 'NEN',
+				"U_EXX_CORREPER"=TO_VARCHAR(:Folio),
+				"U_EXX_SERIEPER"=:FolioPref,
+				"U_EXX_FE_TIPCOM"= :CodigoSunat
+			WHERE
+				"DocEntry"= :DocEntry;
+	END IF;
+	
+    
+    
+--GUIA POR VENTA
+ELSEIF (:ObjectType = '15') THEN
+
+	SELECT "Series", "Indicator", "DocNum",IFNULL("U_EXX_FE_Estado",'-'),"U_EXX_HOAS_STAD"
+	INTO Series,Indicador,DocNum,Estado,EstadoEnvioSUNAT
+	FROM ODLN WHERE "DocEntry"= :DocEntry;
+
+	SELECT "FolioPref",LEFT("SeriesName",4)
+	INTO FolioPref,SeriesName
+	FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	
+	SELECT IFNULL((SELECT TOP 1("Code") FROM "@EXX_FE_FOLIO_LIB" WHERE "U_FE_Series"=:Series),0) INTO Code FROM DUMMY;
+
+	IF (:Code=0) THEN
+		SELECT IFNULL("NextFolio", 1) INTO Folio
+		FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	
+	ELSE 
+		SELECT "U_FE_FolioNum" INTO Folio FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+		DELETE FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+	END IF;
+	
+	IF (:Estado) !='-' THEN
+		UPDATE ODLN
+		SET "U_EXX_FE_Estado" = 'NEN'
+		WHERE "DocEntry"=:DocEntry;
+	END IF;
+
+	UPDATE ODLN
+	SET
+		"FolioNum"=:Folio,
+		"FolioPref"=:FolioPref,
+		"Printed"='Y',
+		"U_EXX_FE_TIPCOM"=:CodigoSunat,
+		"U_EXX_FE_ClaAcc"=:RUC||'-'||:Indicador||'-'||:SeriesName||'-'||CAST(:Folio AS NVARCHAR)
+	WHERE
+		"DocEntry"= :DocEntry;
+		
+--GUIA POR DEVOLUCION DE COMPRA
+ELSEIF (:ObjectType = '21') THEN
+
+	SELECT "Series", "Indicator", "DocNum",IFNULL("U_EXX_FE_Estado",'-')
+	INTO Series,Indicador,DocNum,Estado
+	FROM ORPD WHERE "DocEntry"= :DocEntry;
+
+	SELECT "FolioPref",LEFT("SeriesName",4)
+	INTO FolioPref,SeriesName
+	FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	
+	SELECT IFNULL((SELECT TOP 1("Code") FROM "@EXX_FE_FOLIO_LIB" WHERE "U_FE_Series"=:Series),0) INTO Code FROM DUMMY;
+
+	IF (:Code=0) THEN
+		SELECT IFNULL("NextFolio", 1) INTO Folio
+		FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	
+	ELSE 
+		SELECT "U_FE_FolioNum" INTO Folio FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+		DELETE FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+	END IF;
+	
+	IF (:Estado) !='-' THEN
+		UPDATE ORPD
+		SET "U_EXX_FE_Estado" = 'NEN'
+		WHERE "DocEntry"=:DocEntry;
+	END IF;
+
+	UPDATE ORPD
+	SET
+		"FolioNum"=:Folio,
+		"FolioPref"=:FolioPref,
+		"Printed"='Y',
+		"U_EXX_FE_TIPCOM"=:CodigoSunat,
+		"U_EXX_FE_ClaAcc"=:RUC||'-'||:Indicador||'-'||:SeriesName||'-'||CAST(:Folio AS NVARCHAR)
+	WHERE
+		"DocEntry"= :DocEntry;
+		
+--GUIA POR SALIDA DE INVENTARIO
+ELSEIF (:ObjectType = '60') THEN
+
+	SELECT "Series", '09', "DocNum",IFNULL("U_EXX_FE_Estado",'-')
+	INTO Series,Indicador,DocNum,Estado
+	FROM OIGE WHERE "DocEntry"= :DocEntry;
+
+	SELECT "FolioPref",LEFT("SeriesName",4)
+	INTO FolioPref,SeriesName
+	FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	
+	SELECT IFNULL((SELECT TOP 1("Code") FROM "@EXX_FE_FOLIO_LIB" WHERE "U_FE_Series"=:Series),0) INTO Code FROM DUMMY;
+
+	IF (:Code=0) THEN
+		SELECT IFNULL("NextFolio", 1) INTO Folio
+		FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	
+	ELSE 
+		SELECT "U_FE_FolioNum" INTO Folio FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+		DELETE FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+	END IF;
+	
+	IF (:Estado) !='-' THEN
+		UPDATE OIGE
+		SET "U_EXX_FE_Estado" = 'NEN',
+		"Indicator"= :Indicador
+		WHERE "DocEntry"=:DocEntry;
+	END IF;
+
+	UPDATE OIGE
+	SET
+		"FolioNum"=:Folio,
+		"FolioPref"=:FolioPref,
+		"Printed"='Y',
+		"U_EXX_FE_TIPCOM"=:CodigoSunat,
+		"U_EXX_FE_ClaAcc"=:RUC||'-'||:Indicador||'-'||:SeriesName||'-'||CAST(:Folio AS NVARCHAR)
+	WHERE
+		"DocEntry"= :DocEntry;
+		
+--GUIA POR TRANSFERENCIA ENTRE ALMACENES
+ELSEIF (:ObjectType = '67') THEN
+
+	SELECT "Series", '09', "DocNum",IFNULL("U_EXX_FE_Estado",'-')
+	INTO Series,Indicador,DocNum,Estado
+	FROM OWTR WHERE "DocEntry"= :DocEntry;
+
+	SELECT "FolioPref",LEFT("SeriesName",4)
+	INTO FolioPref,SeriesName
+	FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	
+	SELECT IFNULL((SELECT TOP 1("Code") FROM "@EXX_FE_FOLIO_LIB" WHERE "U_FE_Series"=:Series),0) INTO Code FROM DUMMY;
+
+	IF (:Code=0) THEN
+		SELECT IFNULL("NextFolio", 1) INTO Folio
+		FROM NNM1 WHERE "Series"=:Series AND "U_FE_TipoEmision"='FE' AND "Locked" = 'N';
+	
+	ELSE 
+		SELECT "U_FE_FolioNum" INTO Folio FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+		DELETE FROM "@EXX_FE_FOLIO_LIB" WHERE "Code"=:Code;
+	END IF;
+	
+	IF (:Estado) !='-' THEN
+		UPDATE OWTR
+		SET "U_EXX_FE_Estado" = 'NEN',
+		"Indicator"= :Indicador
+		WHERE "DocEntry"=:DocEntry;
+	END IF;
+
+	UPDATE OWTR
+	SET
+		"FolioNum"=:Folio,
+		"FolioPref"=:FolioPref,
+		"Printed"='Y',
+		"U_EXX_FE_TIPCOM"=:CodigoSunat,
+		"U_EXX_FE_ClaAcc"=:RUC||'-'||:Indicador||'-'||:SeriesName||'-'||CAST(:Folio AS NVARCHAR)
+	WHERE
+		"DocEntry"= :DocEntry;
+END IF;
+
+UPDATE OJDT
+	SET
+		"FolioNum"=:Folio,
+		"FolioPref"=:FolioPref
+	WHERE
+		"CreatedBy"= :DocEntry AND "TransType"=:ObjectType AND "BaseRef"=:DocNum;
+
+IF (:Code=0) THEN
+	UPDATE NNM1
+	SET
+		"NextFolio"=:Folio + 1
+	WHERE
+		"Series" = :Series;
+END IF;
+
+	IF IFNULL(:Folia,0) = 0 THEN
+
+		IF (:Contingencia = 'N') THEN
+			 IF(:ObjectType = '15') THEN
+				IF(:EstadoEnvioSUNAT='Y') THEN
+					Call "FEX_PE"."FEX_ACCION_Guardar" (
+					  0,     --IN IdAccion bigint.  0 Para Insert.  Valor de IdAccion para actualizar registro existente
+					  :IdFexCompany,     --IN IdFexCompany int. Valor de Company para documento actual
+					 :CodigoSunat, --IN CodigoEntidad varchar(50).
+					 :DocEntry,    --IN DocEntry int.
+					 :ObjectType,    --IN ObjectType varchar(50).
+					 :DocSubType,    --IN DocSubType varchar(50).
+					 '100',    --IN IdTipoAccion int.
+					 'VIG',    --IN Estado varchar(50).
+					 CURRENT_TIMESTAMP --IN FechaCreacion varchar(70)
+					);
+				END IF;
+			ELSE 	
+				Call "FEX_PE"."FEX_ACCION_Guardar" (
+				  0,     --IN IdAccion bigint.  0 Para Insert.  Valor de IdAccion para actualizar registro existente
+				  :IdFexCompany,     --IN IdFexCompany int. Valor de Company para documento actual
+				 :CodigoSunat, --IN CodigoEntidad varchar(50).
+				 :DocEntry,    --IN DocEntry int.
+				 :ObjectType,    --IN ObjectType varchar(50).
+				 :DocSubType,    --IN DocSubType varchar(50).
+				 '100',    --IN IdTipoAccion int.
+				 'VIG',    --IN Estado varchar(50).
+				 CURRENT_TIMESTAMP --IN FechaCreacion varchar(70)
+				);
+			END IF;
+
+		ELSE
+			IF (:TipoDocContingencia <> '03') THEN
+								
+				Call "FEX_PE"."FEX_ACCION_Guardar" (
+				  0,     --IN IdAccion bigint.  0 Para Insert.  Valor de IdAccion para actualizar registro existente
+				  :IdFexCompany,     --IN IdFexCompany int. Valor de Company para documento actual
+				 :CodigoSunat, --IN CodigoEntidad varchar(50).
+				 :DocEntry,    --IN DocEntry int.
+				 :ObjectType,    --IN ObjectType varchar(50).
+				 :DocSubType,    --IN DocSubType varchar(50).
+				 '122',    --IN IdTipoAccion int.
+				 'VIG',    --IN Estado varchar(50).
+				 CURRENT_TIMESTAMP --IN FechaCreacion varchar(70)
+				);
+				
+				
+				
+				
+			END IF;
+		
+		END IF;
+	END IF; -- FOLIA
 END;

@@ -15,7 +15,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header
     [Serializable]
     [UserDefinedTable(ID, DESCRIPTION)]
     [Udo(ID, SAPbobsCOM.BoUDOObjType.boud_MasterData, Description = DESCRIPTION)]
-    [UDOServices(FindServices.DefinedFields, CanDelete = true)]
+    [UDOServices(FindServices.DefinedFields, CanDelete = false,CanCancel =true)]
     [DefaultForm(SAPbobsCOM.BoYesNoEnum.tYES)]
     public class OHRG : BaseUDO
     {

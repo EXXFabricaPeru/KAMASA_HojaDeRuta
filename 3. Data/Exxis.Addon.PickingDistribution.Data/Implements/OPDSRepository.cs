@@ -39,8 +39,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                         {
                             Code = x.GetString(@"Code"),
                             Name = x.GetString(@"Name"),
-                            ValueType = x.GetString(@"U_VS_LT_CTIP"),
-                            Value = x.GetString(@"U_VS_LT_CVAL")
+                            ValueType = x.GetString(@"U_EXX_HOAS_CTIP"),
+                            Value = x.GetString(@"U_EXX_HOAS_CVAL")
                         };
                     }
                     catch (SafeRecordSet.NotRecordFound)

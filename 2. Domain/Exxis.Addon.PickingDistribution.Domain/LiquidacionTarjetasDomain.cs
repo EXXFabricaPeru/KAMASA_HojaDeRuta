@@ -110,9 +110,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain
             return UnitOfWork.LiquidacionTarjetasRepository.RetrieveCodigoGenerado();
         }
 
-        public void ActualizarProgramado(string numeracion, string estado)
+        public void ActualizarProgramado(string numeracion, string estado,ODLN datosGuias)
         {
-            UnitOfWork.LiquidacionTarjetasRepository.ActualizarProgramado(numeracion, estado);
+            UnitOfWork.LiquidacionTarjetasRepository.ActualizarProgramado(numeracion, estado, datosGuias);
         }
 
         public void ActualizarEnvioSunat(string sunat)
@@ -130,9 +130,11 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain
             return UnitOfWork.LiquidacionTarjetasRepository.GetCargaUtilByPlaca(placa);
         }
 
-        public Tuple<bool, string> ObtenerPDF(string numeracion)
+        public Tuple<bool, byte[]> ObtenerPDF(string numeracion)
         {
             return UnitOfWork.LiquidacionTarjetasRepository.ObtenerPDF(numeracion);
         }
+
+        
     }
 }

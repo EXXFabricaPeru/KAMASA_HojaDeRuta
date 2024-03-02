@@ -40,10 +40,10 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Repository
         public abstract Tuple<bool, OHOJ> RetrieveHojaRuta(string value);
         public abstract Tuple<bool, List<ODLN>> RetrieveGuiasHoja(string desde, string hasta, string programado, string zona);
         public abstract string RetrieveCodigoGenerado();
-        public abstract void ActualizarProgramado(string numeracion, string estado);
+        public abstract void ActualizarProgramado(string numeracion, string estado, ODLN datosGuia);
         public abstract void ActualizarEnvioSunat(string sunat);
         public abstract void ActualizarEstadoHojaGuia(string estado,string codigo);
         public abstract Tuple<bool, string> GetCargaUtilByPlaca(string placa);
-        public abstract Tuple<bool, string> ObtenerPDF(string numeracion);
+        public abstract Tuple<bool, byte[]> ObtenerPDF(string numeracion);
     }
 }

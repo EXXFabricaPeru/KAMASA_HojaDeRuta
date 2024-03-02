@@ -21,41 +21,42 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header
         [SAPColumn(@"LicTradNum")]
         public string LicTradNum { get; set; }
 
-        [SAPColumn(@"U_BPP_BPTP")] public string BPP_BPTP { get; set; }
+        //[SAPColumn(@"U_BPP_BPTP")] 
+        public string BPP_BPTP { get; set; }
 
-        [SAPColumn(@"U_CL_FACTF", false)]
-        [FieldNoRelated("U_CL_FACTF", "Factura_Fisica?", BoDbTypes.Alpha, Size = 1, Default = "Y")]
-        [Val("N", "NO")]
-        [Val("Y", "SI")]
+        //[SAPColumn(@"U_CL_FACTF", false)]
+        //[FieldNoRelated("U_CL_FACTF", "Factura_Fisica?", BoDbTypes.Alpha, Size = 1, Default = "Y")]
+        //[Val("N", "NO")]
+        //[Val("Y", "SI")]
         public string FACTF { get; set; }
 
-        [SAPColumn(@"U_CL_CERTIF", false)]
-        [FieldNoRelated("U_CL_CERTIF", "Certificado_Calidad?", BoDbTypes.Alpha, Size = 1, Default = "Y")]
-        [Val("N", "NO")]
-        [Val("Y", "SI")]
+        //[SAPColumn(@"U_CL_CERTIF", false)]
+        //[FieldNoRelated("U_CL_CERTIF", "Certificado_Calidad?", BoDbTypes.Alpha, Size = 1, Default = "Y")]
+        //[Val("N", "NO")]
+        //[Val("Y", "SI")]
         public string CertificadoCalidad { get; set; }
 
-        [SAPColumn(@"U_CL_CECO", false)]
-        [FieldNoRelated("U_CL_CECO", "Centro de Costo", BoDbTypes.Alpha, Size = 30)]
+        //[SAPColumn(@"U_CL_CECO", false)]
+        //[FieldNoRelated("U_CL_CECO", "Centro de Costo", BoDbTypes.Alpha, Size = 30)]
         public string GenericCostCenter { get; set; }
 
-        [SAPColumn(@"U_CL_CECO2", false)]
-        [FieldNoRelated("U_CL_CECO2", "Sub Centro de Costo", BoDbTypes.Alpha, Size = 30)]
+        //[SAPColumn(@"U_CL_CECO2", false)]
+        //[FieldNoRelated("U_CL_CECO2", "Sub Centro de Costo", BoDbTypes.Alpha, Size = 30)]
         public string GenericCostCenter2 { get; set; }
 
-        [SAPColumn(@"U_CL_CECO3", false)]
-        [FieldNoRelated("U_CL_CECO3", "Sub_Sub Centro de Costo", BoDbTypes.Alpha, Size = 30)]
+        //[SAPColumn(@"U_CL_CECO3", false)]
+        //[FieldNoRelated("U_CL_CECO3", "Sub_Sub Centro de Costo", BoDbTypes.Alpha, Size = 30)]
         public string GenericCostCenter3 { get; set; }
 
-        [SAPColumn(@"U_CL_CANAL", false)]
-        [FieldLinkedUdt("U_CL_CANAL", "Canal", Size: 2, linkedUserTable:"@VS_LP_CANALVENTA")]
+        //[SAPColumn(@"U_CL_CANAL", false)]
+        //[FieldLinkedUdt("U_CL_CANAL", "Canal", Size: 2, linkedUserTable:"@VS_LP_CANALVENTA")]
         public string SaleChannel { get; set; }
 
 
         [SAPColumn("Phone1")]
         public string Phone { get; set; }
 
-        [SAPColumn(@"U_VS_AFPRCP")]
+        //[SAPColumn(@"U_VS_AFPRCP")]
         public string TipoAgente { get; set; }
 
         [SAPColumn(@"WTLiable")]

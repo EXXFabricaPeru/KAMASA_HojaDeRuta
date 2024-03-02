@@ -101,7 +101,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
             try
             {
                 //Constants.Menu.MAIN_APPLICATION,
-                _rootSAPMenu = append_sap_menu(_application.Menus.Item(SAP_MODULE_MENU_ID).SubMenus, Constants.Menu.MAIN_APPLICATION, @"VS-Addon Hoja de Ruta a Guías", BoMenuType.mt_POPUP);
+                _rootSAPMenu = append_sap_menu(_application.Menus.Item(SAP_MODULE_MENU_ID).SubMenus, Constants.Menu.MAIN_APPLICATION, @"EXXIS-Addon Hoja de Ruta a Guías", BoMenuType.mt_POPUP);
                 return true;
             }
             catch
