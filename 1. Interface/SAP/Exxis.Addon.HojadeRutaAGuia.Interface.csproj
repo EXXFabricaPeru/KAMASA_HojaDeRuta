@@ -372,8 +372,8 @@
     <Compile Include="Views\UserObjectViews\HojaRutaAsignacion.b1f.cs">
       <DependentUpon>HojaRutaAsignacion.b1f</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserViews\ReporteLiquidacion.b1f.cs">
-      <DependentUpon>ReporteLiquidacion.b1f</DependentUpon>
+    <Compile Include="Views\UserViews\Form1.b1f.cs">
+      <DependentUpon>Form1.b1f</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -387,7 +387,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Query\TransactionNotice\bpvs_LP_TN_OP_ListaPrecioCliente_Detalle.sql" />
-    <Content Include="Resources\Query\VS_SP_RPT_EMAILPROVEEDOR.sql" />
+    <Content Include="Resources\Query\SP_REPORTE.sql" />
     <Content Include="Resources\Query\proc_transac.sql" />
     <Content Include="Resources\Query\TransactionNotice\bpvs_PD_TN_OP_OrdenVenta_17.sql" />
     <Content Include="Resources\Query\TransactionNotice\bpvs_PD_TransactNotification.sql" />
@@ -406,10 +406,13 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Reports\ReporteAsignacionRuta.rpt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\UserObjectViews\HojaRutaAsignacion.b1f">
       <FormCategory>UDOForm</FormCategory>
     </None>
-    <None Include="Views\UserViews\ReporteLiquidacion.b1f">
+    <None Include="Views\UserViews\Form1.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
   </ItemGroup>

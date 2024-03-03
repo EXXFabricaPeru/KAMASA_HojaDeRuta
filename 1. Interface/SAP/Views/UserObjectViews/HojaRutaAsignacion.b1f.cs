@@ -1,4 +1,6 @@
-﻿using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header.Document;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Windows.Forms;
+using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header.Document;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities;
 using Exxis.Addon.HojadeRutaAGuia.Domain;
@@ -49,6 +51,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             this._filtrarButton.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this._filtrarButton_ClickBefore);
             this._filtrarButton.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this._filtrarButton_ClickAfter);
             this._guiaMatrix = ((SAPbouiCOM.Matrix)(this.GetItem("0_U_G").Specific));
+            this._guiaMatrix.ClickAfter += new SAPbouiCOM._IMatrixEvents_ClickAfterEventHandler(this._guiaMatrix_ClickAfter);
+            this._guiaMatrix.ValidateAfter += new SAPbouiCOM._IMatrixEvents_ValidateAfterEventHandler(this._guiaMatrix_ValidateAfter);
             this._hojaRutaEditText = ((SAPbouiCOM.EditText)(this.GetItem("13_U_E").Specific));
             this._transportistaEditText = ((SAPbouiCOM.EditText)(this.GetItem("14_U_E").Specific));
             this._choferEditText = ((SAPbouiCOM.EditText)(this.GetItem("15_U_E").Specific));
@@ -77,6 +81,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             this._cargaUtil = ((SAPbouiCOM.EditText)(this.GetItem("28_U_E").Specific));
             this._diferenciaEditText = ((SAPbouiCOM.EditText)(this.GetItem("30_U_E").Specific));
             this.LinkedButton0 = ((SAPbouiCOM.LinkedButton)(this.GetItem("Item_9").Specific));
+            this._impresionComboButton = ((SAPbouiCOM.ButtonCombo)(this.GetItem("Item_10").Specific));
+            this._impresionComboButton.ClickAfter += new SAPbouiCOM._IButtonComboEvents_ClickAfterEventHandler(this._impresionComboButton_ClickAfter);
+            this._impresionComboButton.ComboSelectAfter += new SAPbouiCOM._IButtonComboEvents_ComboSelectAfterEventHandler(this._impresionComboButton_ComboSelectAfter);
             this.OnCustomInitialize();
 
         }
@@ -113,6 +120,12 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             }
             _enviarSunatButton.Item.Enabled = false;
             //_crearButton.Caption = "Programar";
+
+            //_impresionComboButton.ValidValues.Add("Imprimir", "");
+            //_impresionComboButton.ValidValues.Add("Imprimir2", "");
+            _impresionComboButton.ValidValues.Add("1", "Imprimir GR");
+            _impresionComboButton.ValidValues.Add("2", "Imprimir HR");
+            _impresionComboButton.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
         }
 
         private void initialize_choose_from_list()
@@ -562,6 +575,161 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
 
         private void Button3_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
+          
+
+        }
+
+        private LinkedButton LinkedButton0;
+
+        private void Form_LoadAfter(SBOItemEventArg pVal)
+        {
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
+            }
+
+        }
+
+        private ButtonCombo _impresionComboButton;
+
+
+        bool eventButtonCombo = false;
+        private void _impresionComboButton_ComboSelectAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                bloquearCampos();
+
+                eventButtonCombo = true;
+                var x = pVal;
+            }
+            catch (Exception ex)
+            {
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
+            }
+
+        }
+
+        private void bloquearCampos()
+        {
+            if (_estadoComboBox.Selected.Value == "T")
+            {
+                _enviarSunatButton.Item.Enabled = true;
+                _terminarProButton.Item.Enabled = false;
+                _programarButton.Item.Enabled = false;
+                _desprogramarButton.Item.Enabled = false;
+                _filtrarButton.Item.Enabled = false;
+
+            }
+            else if (_estadoComboBox.Selected.Value == "O")
+            {
+                _enviarSunatButton.Item.Enabled = false;
+                _terminarProButton.Item.Enabled = true;
+                _programarButton.Item.Enabled = true;
+                _desprogramarButton.Item.Enabled = true;
+                _filtrarButton.Item.Enabled = true;
+
+            }
+            if (UIAPIRawForm.Mode != BoFormMode.fm_ADD_MODE)
+            {
+                _filtrarButton.Item.Enabled = false;
+            }
+
+        }
+
+        private void _impresionComboButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+
+                if (eventButtonCombo)
+                    eventButtonCombo = false;
+                else
+                {
+                    if (_impresionComboButton.Selected.Value == "1")
+                        imprimirGR();
+                    else
+                        imprimirHR();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
+            }
+
+        }
+
+        private void imprimirHR()
+        {
+            CrystalReportViewer crystalReportViewer = new CrystalReportViewer();
+
+            // Crear una instancia del informe de Crystal Reports
+            ReportDocument reportDocument = new ReportDocument();
+      
+            try
+            {
+                PrinterSettings printerSettings = new PrinterSettings();
+
+                // Verifica si hay una impresora predeterminada configurada
+                var impresoraDefecto = "";
+                if (printerSettings.IsDefaultPrinter)
+                {
+                    impresoraDefecto = printerSettings.PrinterName;
+                }
+                else
+                {
+                    throw new Exception("No hay una impresora predeterminada configurada.");
+                }
+
+                var sPath = System.Windows.Forms.Application.StartupPath;
+                // Cargar el archivo del informe de Crystal Reports
+                try
+                {
+
+                    reportDocument.Load(@"\\192.168.1.215\Compartida\ReporteAsignacionRuta.rpt");
+                    //reportDocument.Load(@"C:\Reporte\ReporteAsignacionRuta.rpt"); // Reemplaza "ruta\al\informe.rpt" con la ruta real de tu informe
+
+                }
+                catch (Exception)
+                {
+                    var bin = sPath + "\\Reports\\ReporteAsignacionRuta.rpt";
+                    //reportDocument.Load(@"\\192.168.1.215\Instaladores\ReporteAddon.rpt");
+                    reportDocument.Load(bin);
+                }
+
+
+
+                reportDocument.SetDatabaseLogon("SAPINST", "Passw0rd");
+                reportDocument.SetParameterValue(0, _codigoHojaEditText.Value);
+                // Asignar el informe al visor de informes
+                //crystalReportViewer.ReportSource = reportDocument;
+
+                reportDocument.PrintOptions.PrinterName = impresoraDefecto;
+                reportDocument.PrintToPrinter(1, true, 1, 1);
+
+ 
+            }
+            catch (Exception ex)
+            {
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
+                Console.WriteLine($"Error al abrir el informe: {ex.Message}");
+            }
+            finally
+            {
+                // Liberar recursos
+                reportDocument.Close();
+                reportDocument.Dispose();
+            }
+            ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Finalizó la impresión");
+        }
+
+        private void imprimirGR()
+        {
             try
             {
                 PrinterSettings printerSettings = new PrinterSettings();
@@ -605,7 +773,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                                 //pdfdocument.Print(pdf);
 
                                 pdfdocument.PrintSettings.PrinterName = impresoraDefecto;//printerName;              
-                                pdfdocument.PrintSettings.Copies = 2;
+                                pdfdocument.PrintSettings.Copies = 1;
                                 pdfdocument.Print();
                                 pdfdocument.Dispose();
 
@@ -632,28 +800,24 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             }
             catch (Exception ex)
             {
-                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message); 
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
             }
             finally
             {
                 UIAPIRawForm.Freeze(false);
                 ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se terminó el proces");
             }
+        }
+
+        private void _guiaMatrix_ValidateAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            bloquearCampos();
 
         }
 
-        private LinkedButton LinkedButton0;
-
-        private void Form_LoadAfter(SBOItemEventArg pVal)
+        private void _guiaMatrix_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            try
-            {
-
-            }
-            catch (Exception)
-            {
-
-            }
+            bloquearCampos();
 
         }
     }

@@ -24,7 +24,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
         private IList<BaseMenu> _applicationMenus;
         private readonly SAPMenu _rootMenu;
         private MenuItem _rootSAPMenu;
-
+        private IList<FlowMenu> _applicationMenusTest;
         private readonly SAPbouiCOM.Framework.Application _sapApplication;
         private readonly Application _application;
         private readonly SAPbobsCOM.Company _company;
@@ -59,12 +59,12 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
             //if (_ad.isOK)
             //{
             charge_menus();
-                try_make_base_menu().IfTrue(() => _applicationMenus.ForEach(build_sap_menu));
-                append_versions();
+            try_make_base_menu().IfTrue(() => _applicationMenus.ForEach(build_sap_menu));
+            append_versions();
 
-                set_events();
-              
-                
+            set_events();
+
+
             //}
             //else
             //{
@@ -86,6 +86,10 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
                 var menu = GenericHelper.MakeInstance(type).To<BaseMenu>();
                 _applicationMenus.Add(menu);
             }
+
+            //var menu = GenericHelper.MakeInstance(type).To<FlowMenu>();
+            //_applicationMenusTest.Add()
+
             _applicationMenus = _applicationMenus.OrderBy(t => t.RootSAPMenu.Id).ToList();
         }
 
@@ -121,7 +125,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
         {
             try
             {
-                append_sap_menu(_rootSAPMenu.SubMenus, id, description, BoMenuType.mt_POPUP);
+                //cambiar a popup para 3 niveles
+                append_sap_menu(_rootSAPMenu.SubMenus, id, description, BoMenuType.mt_STRING);
             }
             catch
             {
@@ -133,8 +138,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
         {
             try
             {
-                MenuItem menuItem = _application.Menus.Item(rootMenuId);
-                append_sap_menu(menuItem.SubMenus, id, description, BoMenuType.mt_STRING);
+                //Menu de 3 niveles
+                //MenuItem menuItem = _application.Menus.Item(rootMenuId);
+                //append_sap_menu(menuItem.SubMenus, id, description, BoMenuType.mt_STRING);
             }
             catch
             {
