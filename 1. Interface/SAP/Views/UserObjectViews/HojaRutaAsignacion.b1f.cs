@@ -80,10 +80,12 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             this._zonaRuta = ((SAPbouiCOM.EditText)(this.GetItem("24_U_E").Specific));
             this._cargaUtil = ((SAPbouiCOM.EditText)(this.GetItem("28_U_E").Specific));
             this._diferenciaEditText = ((SAPbouiCOM.EditText)(this.GetItem("30_U_E").Specific));
-            this.LinkedButton0 = ((SAPbouiCOM.LinkedButton)(this.GetItem("Item_9").Specific));
+            this.linkedButonHojaRuta = ((SAPbouiCOM.LinkedButton)(this.GetItem("Item_9").Specific));
             this._impresionComboButton = ((SAPbouiCOM.ButtonCombo)(this.GetItem("Item_10").Specific));
             this._impresionComboButton.ClickAfter += new SAPbouiCOM._IButtonComboEvents_ClickAfterEventHandler(this._impresionComboButton_ClickAfter);
             this._impresionComboButton.ComboSelectAfter += new SAPbouiCOM._IButtonComboEvents_ComboSelectAfterEventHandler(this._impresionComboButton_ComboSelectAfter);
+            this._cancelarButton = ((SAPbouiCOM.Button)(this.GetItem("Item_11").Specific));
+            this._cancelarButton.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this._cancelarButton_ClickAfter);
             this.OnCustomInitialize();
 
         }
@@ -94,7 +96,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
         public override void OnInitializeFormEvents()
         {
             this.DataLoadAfter += new SAPbouiCOM.Framework.FormBase.DataLoadAfterHandler(this.Form_DataLoadAfter);
-            this.LoadAfter += new LoadAfterHandler(this.Form_LoadAfter);
+            this.LoadAfter += new SAPbouiCOM.Framework.FormBase.LoadAfterHandler(this.Form_LoadAfter);
+            this.DataAddAfter += new SAPbouiCOM.Framework.FormBase.DataAddAfterHandler(this.Form_DataAddAfter);
+            this.DataAddBefore += new DataAddBeforeHandler(this.Form_DataAddBefore);
 
         }
 
@@ -107,7 +111,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             _infrastructureDomain = FormHelper.GetDomain<InfrastructureDomain>();
             _liquidacionTarjetaDomain = FormHelper.GetDomain<LiquidacionTarjetasDomain>();
             _settingsDomain = FormHelper.GetDomain<SettingsDomain>();
-
+            _crearButton.Caption = "Programar";
             if (UIAPIRawForm.Mode == BoFormMode.fm_ADD_MODE)
             {
                 _zonaRutaCheck.Check();
@@ -117,6 +121,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 _codigoHojaEditText.Value = _liquidacionTarjetaDomain.RetrieveCodigoGenerado();
                 //_crearButton.Caption = "Programar";
                 _enviarSunatButton.Item.Enabled = false;
+                _programadosComboBox.Item.Enabled = false;
             }
             _enviarSunatButton.Item.Enabled = false;
             //_crearButton.Caption = "Programar";
@@ -247,67 +252,83 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
 
         private void _filtrarButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            if (!string.IsNullOrEmpty(_hojaRutaEditText.Value))
+            try
             {
-                try
+                UIAPIRawForm.Freeze(true);
+                if (_filtrarButton.IsEnabled())
                 {
-
-                    _guiaMatrix.Clear();
-                    var combo = _programadosComboBox.Selected != null ? _programadosComboBox.Selected.Value : "";
-                    var listaGuias = _liquidacionTarjetaDomain.RetrieveGuiasHoja(_desdeEditText.Value, _hastaEditText.Value, combo, "Zona");
-                    //var listaGuias = _liquidacionTarjetaDomain.RetrieveGuiasHoja("", "", "", "Zona");
-
-
-
-                    int cont = 1;
-                    if (listaGuias.Item1)
+                    if (!string.IsNullOrEmpty(_hojaRutaEditText.Value))
                     {
-                        var lista = listaGuias.Item2;
-                        string[] palabras = _zonaDespachoEditText.Value.Split(new char[] { '-', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (_zonaRutaCheck.Checked)
+                        try
                         {
-                            lista = lista.Where(t => palabras.Any(palabra => t.Zona.Contains(palabra))).ToList();
-                        }
 
-                        var totalcargado = 0.00;
-                        var cantidadbultos = 0.00;
-                        foreach (var item in lista)
+                            _guiaMatrix.Clear();
+                            var combo = "N";// _programadosComboBox.Selected != null ? _programadosComboBox.Selected.Value : "";
+                            var listaGuias = _liquidacionTarjetaDomain.RetrieveGuiasHoja(_desdeEditText.Value, _hastaEditText.Value, combo, "Zona");
+                            //var listaGuias = _liquidacionTarjetaDomain.RetrieveGuiasHoja("", "", "", "Zona");
+
+
+
+                            int cont = 1;
+                            if (listaGuias.Item1)
+                            {
+                                var lista = listaGuias.Item2;
+                                string[] palabras = _zonaDespachoEditText.Value.Split(new char[] { '-', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                                if (_zonaRutaCheck.Checked)
+                                {
+                                    lista = lista.Where(t => palabras.Any(palabra => t.Zona.Contains(palabra))).ToList();
+                                }
+
+                                var totalcargado = 0.00;
+                                var cantidadbultos = 0.00;
+                                foreach (var item in lista)
+                                {
+                                    _guiaMatrix.AddRow();
+                                    ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(cont).Specific).Check();// = item.NumberAtCard;
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(cont).Specific).Value = item.NumberAtCard;
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(cont).Specific).Value = item.Peso;
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(cont).Specific).Value = item.CantidadBultos.ToString();
+                                    ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(cont).Specific).SelectByValue(item.Programado);
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(cont).Specific).Value = item.Zona;
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(cont).Specific).Value = item.DireccionDespacho;
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(cont).Specific).Value = item.DepProvZona;
+                                    cont++;
+
+                                    totalcargado += item.Peso.ToDouble();
+                                    cantidadbultos += item.CantidadBultos;
+                                }
+                                _totalCargadoEditText.Value = totalcargado.ToString();
+                                _cantidadBultosEditText.Value = cantidadbultos.ToString();
+                                _diferenciaEditText.Value = (_cargaUtil.Value.ToDouble() - totalcargado).ToString();
+
+                            }
+                        }
+                        catch (Exception ex)
                         {
-                            _guiaMatrix.AddRow();
-                            ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(cont).Specific).Value = item.NumberAtCard;
-                            ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(cont).Specific).Value = item.Peso;
-                            ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(cont).Specific).Value = item.CantidadBultos.ToString();
-                            ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(cont).Specific).SelectByValue(item.Programado);
-                            ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(cont).Specific).Value = item.Zona;
-                            ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(cont).Specific).Value = item.DireccionDespacho;
-                            ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(cont).Specific).Value = item.DepProvZona;
-                            cont++;
 
-                            totalcargado += item.Peso.ToDouble();
-                            cantidadbultos += item.CantidadBultos;
+                            ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
                         }
-                        _totalCargadoEditText.Value = totalcargado.ToString();
-                        _cantidadBultosEditText.Value = cantidadbultos.ToString();
-                        _diferenciaEditText.Value = (_cargaUtil.Value.ToDouble() - totalcargado).ToString();
-
+                        finally
+                        {
+                            _guiaMatrix.AutoResizeColumns();
+                        }
+                    }
+                    else
+                    {
+                        ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Debe seleccionar primero una hoja de ruta");
                     }
                 }
-                catch (Exception ex)
-                {
-
-                    ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
-                }
-                finally
-                {
-                    _guiaMatrix.AutoResizeColumns();
-                }
             }
-            else
+            catch (Exception ex)
             {
-                ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Debe seleccionar primero una hoja de ruta");
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
             }
-
+            finally
+            {
+                UIAPIRawForm.Freeze(false);
+            }
+       
 
         }
 
@@ -324,74 +345,329 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
         private void _crearButton_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-
+            int cont = _guiaMatrix.RowCount;
+            //if (UIAPIRawForm.IsAddMode())
+            //{
+            validarMatrix(ref BubbleEvent);
+            programarGuias(ref BubbleEvent);
+            //}
 
         }
 
         private void _crearButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
+           
 
+        }
 
+        private void validarMatrix(ref bool bubbleEvent)
+        {
+            try
+            {
+              
+                List<detailGrilla> list = new List<detailGrilla>();
+
+                for (int i = 1; i <= _guiaMatrix.RowCount; i++)
+                {
+                    detailGrilla line = new detailGrilla();
+
+                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+                    var programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).Selected.Value;
+                    if (check.Checked)
+                    {
+                        line.seleccionar = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific).Checked;
+                        line.numeroGuia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                        line.peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(i).Specific).Value;
+                        line.cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific).Value;
+                        line.programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).Selected.Value;
+                        line.zona = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(i).Specific).Value;
+                        line.direccion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(i).Specific).Value;
+                        line.departamento = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(i).Specific).Value;
+                        list.Add(line);
+                    }
+                    else if (programado == "Y")
+                    {
+                        line.seleccionar = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific).Checked;
+                        line.numeroGuia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                        line.peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(i).Specific).Value;
+                        line.cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific).Value;
+                        line.programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).Selected.Value;
+                        line.zona = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(i).Specific).Value;
+                        line.direccion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(i).Specific).Value;
+                        line.departamento = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(i).Specific).Value;
+                        list.Add(line);
+                    }
+                }
+                UIAPIRawForm.Freeze(true);
+                _guiaMatrix.Clear();
+
+                int cont = 1;
+                var totalcargado = 0.00;
+                var cantidadbultos = 0.00;
+
+                foreach (var item in list)
+                {
+                    _guiaMatrix.AddRow();
+                    ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(cont).Specific).Check();
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(cont).Specific).Value = item.numeroGuia;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(cont).Specific).Value = item.peso;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(cont).Specific).Value = item.cantidadBultos.ToString();
+                    ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(cont).Specific).SelectByValue(item.programado);
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(cont).Specific).Value = item.zona;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(cont).Specific).Value = item.direccion;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(cont).Specific).Value = item.departamento;
+                    cont++;
+
+                    totalcargado += item.peso.ToDouble();
+                    cantidadbultos += item.cantidadBultos.ToDouble();
+                }
+
+                _totalCargadoEditText.Value = totalcargado.ToString();
+                _cantidadBultosEditText.Value = cantidadbultos.ToString();
+                _diferenciaEditText.Value = (_cargaUtil.Value.ToDouble() - totalcargado).ToString();
+            }
+            catch (Exception ex)
+            {
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
+                bubbleEvent = false;
+            }
+            finally
+            {
+                UIAPIRawForm.Freeze(false);
+            }
+ 
+
+        }
+
+        public class detailGrilla
+        {
+            public bool seleccionar { get; set; }
+            public string numeroGuia { get; set; }
+            public string peso { get; set; }
+            public string cantidadBultos { get; set; }
+            public string programado { get; set; }
+            public string zona { get; set; }
+            public string direccion { get; set; }
+            public string departamento { get; set; }
         }
 
         private Button _programarButton;
 
         private void _programarButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            if (UIAPIRawForm.IsAddMode())
-            {
-                ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Primero debe crear la hoja de asignación");
-            }
-            else
-            {
+
+        }
+
+        private void programarGuias(ref bool bubbleEvent)
+        {
 
 
-                try
+
+            try
+            {
+
+                UIAPIRawForm.Freeze(true);
+                ODLN datosguia = new ODLN();
+                datosguia.CodigoTransportista = _transportistaEditText.Value;
+                var transportista = _infrastructureDomain.RetrieveBusinessPartner(_transportistaEditText.Value);
+                datosguia.NombreTransportista = transportista.CardName;
+                datosguia.RucTransportista = transportista.LicTradNum;
+                datosguia.DireccionTransportista = transportista.Addresses.FirstOrDefault().Street;
+                datosguia.TipoOperacion = "01";
+                datosguia.MotivoTraslado = "01";
+                datosguia.LicenciaConductor = transportista.Contact.Where(t => t.ID == _choferEditText.Value).FirstOrDefault().Licencia;
+                datosguia.NombreConductor = _choferEditText.Value;
+                datosguia.FechaInicioTraslado = _inicioTrasladoRutaEditText.GetDateTimeValue();
+                datosguia.FEXModalidadTraslado = "02";
+                datosguia.PlacaVehiculo = _placaEditText.Value;
+                datosguia.HojaRuta = _hojaRutaEditText.Value;
+                datosguia.EstadoEnvioSunat = "N";
+
+
+                for (int i = 1; i <= _guiaMatrix.RowCount; i++)
                 {
-
-                    UIAPIRawForm.Freeze(true);
-                    ODLN datosguia = new ODLN();
-                    datosguia.CodigoTransportista = _transportistaEditText.Value;
-                    var transportista = _infrastructureDomain.RetrieveBusinessPartner(_transportistaEditText.Value);
-                    datosguia.NombreTransportista = transportista.CardName;
-                    datosguia.RucTransportista = transportista.LicTradNum;
-                    datosguia.DireccionTransportista = transportista.Addresses.FirstOrDefault().Street;
-                    datosguia.TipoOperacion = "01";
-                    datosguia.MotivoTraslado = "01";
-                    datosguia.LicenciaConductor = transportista.Contact.Where(t=>t.ID==_choferEditText.Value).FirstOrDefault().Licencia ;
-                    datosguia.NombreConductor = _choferEditText.Value;
-                    datosguia.FechaInicioTraslado = _inicioTrasladoRutaEditText.GetDateTimeValue();
-                    datosguia.FEXModalidadTraslado = "02";
-                    datosguia.PlacaVehiculo = _placaEditText.Value;
-                    datosguia.HojaRuta = _hojaRutaEditText.Value;
-                    datosguia.EstadoEnvioSunat = "N";
-
-
-                    for (int i = 1; i <= _guiaMatrix.RowCount; i++)
+                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+                    var cantBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific);
+                    var numguia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific);
+                    if (check.Checked)
                     {
-                        var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
-                        var cantBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific);
-                        var numguia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific);
-                        if (check.Checked)
+                        if (cantBultos.Value.ToDouble() > 0)
                         {
-                            if (cantBultos.Value.ToDouble() > 0)
-                            {
-                                ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("Y");
+                            ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("Y");
 
-                                datosguia.CantidadBultos = cantBultos.Value.ToDouble();
-                                _liquidacionTarjetaDomain.ActualizarProgramado(numguia.Value, "Y", datosguia);
-                            }
-                            else
-                            {
-                                ApplicationInterfaceHelper.ShowErrorStatusBarMessage("No se puede programar la guía " + numguia.Value + " con cantidad de bultos 0");
-                            }
+                            datosguia.CantidadBultos = cantBultos.Value.ToDouble();
+                            _liquidacionTarjetaDomain.ActualizarProgramado(numguia.Value, "Y", datosguia);
+                        }
+                        else
+                        {
 
-
+                            throw new Exception("No se puede programar la guía " + numguia.Value + " con cantidad de bultos 0");
                         }
 
+
                     }
-                    if (_crearButton.Caption != "OK")
-                        _crearButton.Item.Click();
+
+                }
+                //if (_crearButton.Caption != "OK")
+                //    _crearButton.Item.Click();
+            }
+            catch (Exception ex)
+            {
+                bubbleEvent = false;
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
+            }
+            finally
+            {
+                UIAPIRawForm.Freeze(false);
+                ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizaron las guías de remisión");
+            }
+
+
+
+        }
+
+        private void _desprogramarButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            if (_desprogramarButton.IsEnabled())
+            {
+                if (UIAPIRawForm.IsAddMode())
+                {
+                    //ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Primero debe crear la hoja de asignación");
+                }
+                else
+                {
+                    desprogramar();
+                }
+
+            }
+
+        }
+
+        private void desprogramar()
+        {
+            try
+            {
+                ODLN datosguia = new ODLN();
+                UIAPIRawForm.Freeze(true);
+                datosguia.CodigoTransportista = "";
+                var transportista = _infrastructureDomain.RetrieveBusinessPartner(_transportistaEditText.Value);
+                datosguia.NombreTransportista = "";
+                datosguia.RucTransportista = "";
+                datosguia.DireccionTransportista = "";
+                datosguia.TipoOperacion = "";
+                datosguia.MotivoTraslado = "";
+                datosguia.LicenciaConductor = "";
+                datosguia.NombreConductor = "";
+                datosguia.FechaInicioTraslado = _inicioTrasladoRutaEditText.GetDateTimeValue();
+                datosguia.FEXModalidadTraslado = "02";
+                datosguia.PlacaVehiculo = "";
+                datosguia.HojaRuta = "";
+                datosguia.EstadoEnvioSunat = "N";
+
+                List<detailGrilla> list = new List<detailGrilla>();
+
+                for (int i = 1; i <= _guiaMatrix.RowCount; i++)
+                {
+                    detailGrilla line = new detailGrilla();
+                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+                    var programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).Selected.Value;
+                    if (check.Checked)
+                    {
+                        ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
+                        var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                        _liquidacionTarjetaDomain.ActualizarProgramado(numeracion, "N", datosguia);
+                    }
+                    else 
+                    {
+                        line.seleccionar = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific).Checked;
+                        line.numeroGuia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                        line.peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(i).Specific).Value;
+                        line.cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific).Value;
+                        line.programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).Selected.Value;
+                        line.zona = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(i).Specific).Value;
+                        line.direccion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(i).Specific).Value;
+                        line.departamento = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(i).Specific).Value;
+                        list.Add(line);
+                    }
+                }
+
+                UIAPIRawForm.Freeze(true);
+                _guiaMatrix.Clear();
+
+                int cont = 1;
+                var totalcargado = 0.00;
+                var cantidadbultos = 0.00;
+
+                foreach (var item in list)
+                {
+                    _guiaMatrix.AddRow();
+                    ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(cont).Specific).Check();
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(cont).Specific).Value = item.numeroGuia;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(cont).Specific).Value = item.peso;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(cont).Specific).Value = item.cantidadBultos.ToString();
+                    ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(cont).Specific).SelectByValue(item.programado);
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(cont).Specific).Value = item.zona;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(cont).Specific).Value = item.direccion;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(cont).Specific).Value = item.departamento;
+                    cont++;
+
+                    totalcargado += item.peso.ToDouble();
+                    cantidadbultos += item.cantidadBultos.ToDouble();
+                }
+
+                _totalCargadoEditText.Value = totalcargado.ToString();
+                _cantidadBultosEditText.Value = cantidadbultos.ToString();
+                _diferenciaEditText.Value = (_cargaUtil.Value.ToDouble() - totalcargado).ToString();
+
+                _crearButton.Item.Click();
+                //if (_crearButton.Caption != "OK")
+                //    _crearButton.Item.Click();
+
+
+
+                ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizaron las guías de remisión");
+            }
+            catch (Exception ex)
+            {
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
+            }
+            finally
+            {
+                UIAPIRawForm.Freeze(false);
+
+            }
+        }
+
+        private SAPbouiCOM.DBDataSource _headerDataSource;
+        //TERMINAR PROGRAMACION
+        private void _terminarProButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            if (_terminarProButton.IsEnabled())
+            {
+                try
+                {
+                    ApplicationInterfaceHelper.ShowDialogMessageBox("¿Está seguro de terminar la programación?",
+                            () =>
+                            {
+                                UIAPIRawForm.Freeze(true);
+                                _estadoComboBox.SelectByValue("T");
+
+                                _liquidacionTarjetaDomain.ActualizarEstadoHojaGuia("T", _codigoHojaEditText.Value);
+                                _enviarSunatButton.Item.Enabled = true;
+                                _terminarProButton.Item.Enabled = false;
+                                _programarButton.Item.Enabled = false;
+                                _desprogramarButton.Item.Enabled = false;
+
+                                //if (_crearButton.Caption != "OK")
+                                //    _crearButton.Item.Click();
+                                UIAPIRawForm.Refresh();
+
+                                ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizó la hoja de ruta de asignación");
+                            },
+                             null);
+
+
+
                 }
                 catch (Exception ex)
                 {
@@ -400,98 +676,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 finally
                 {
                     UIAPIRawForm.Freeze(false);
-                    ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizaron las guías de remisión");
+
                 }
-            }
 
-        }
-
-        private void _desprogramarButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
-        {
-            if (UIAPIRawForm.IsAddMode())
-            {
-                ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Primero debe crear la hoja de asignación");
-            }
-            else
-            {
-                try
-                {
-                    ODLN datosguia = new ODLN();
-                    UIAPIRawForm.Freeze(true);
-                    datosguia.CodigoTransportista = "";
-                    var transportista = _infrastructureDomain.RetrieveBusinessPartner(datosguia.CodigoTransportista);
-                    datosguia.NombreTransportista = "";
-                    datosguia.RucTransportista = "";
-                    datosguia.DireccionTransportista = "";
-                    datosguia.TipoOperacion = "";
-                    datosguia.MotivoTraslado = "";
-                    datosguia.LicenciaConductor = "";
-                    datosguia.NombreConductor = "";
-                    datosguia.FechaInicioTraslado = _inicioTrasladoRutaEditText.GetDateTimeValue();
-                    datosguia.FEXModalidadTraslado = "02";
-                    datosguia.PlacaVehiculo = "";
-                    datosguia.HojaRuta = "";
-                    datosguia.EstadoEnvioSunat = "N";
-                    for (int i = 1; i <= _guiaMatrix.RowCount; i++)
-                    {
-                        var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
-                        if (check.Checked)
-                        {
-                            ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
-                            var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
-                            _liquidacionTarjetaDomain.ActualizarProgramado(numeracion, "N", datosguia);
-                        }
-
-                    }
-                    if (_crearButton.Caption != "OK")
-                        _crearButton.Item.Click();
-                }
-                catch (Exception)
-                {
-                }
-                finally
-                {
-                    UIAPIRawForm.Freeze(false);
-                    ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizaron las guías de remisión");
-                }
-            }
-        
-        }
-
-        private SAPbouiCOM.DBDataSource _headerDataSource;
-        //TERMINAR PROGRAMACION
-        private void _terminarProButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
-        {
-            UIAPIRawForm.Freeze(true);
-            try
-            {
-                //SAPbouiCOM.DataSource dataSource = UIAPIRawForm.DataSources;
-                //SAPbouiCOM.DBDataSources dbDataSources = dataSource.DBDataSources;
-                //_headerDataSource = dbDataSources.Item(@"@EX_HR_OHGR");
-                //GenericHelper.ReleaseCOMObjects(dbDataSources, dataSource);
-
-                //_estadoComboBox.Select("T", BoSearchKey.psk_ByValue);
-                //_headerDataSource.SetValue("U_EXK_EST", 0, "T");
-                //_headerDataSource.upda
-                _estadoComboBox.SelectByValue("T");
-
-                _liquidacionTarjetaDomain.ActualizarEstadoHojaGuia("T", _codigoHojaEditText.Value);
-                _enviarSunatButton.Item.Enabled = true;
-                _terminarProButton.Item.Enabled = false;
-                _programarButton.Item.Enabled = false;
-                _desprogramarButton.Item.Enabled = false;
-
-                if (_crearButton.Caption != "OK")
-                    _crearButton.Item.Click();
-            }
-            catch (Exception)
-            {
-
-            }
-            finally
-            {
-                UIAPIRawForm.Freeze(false);
-                ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizó la hoja de ruta de asignación");
             }
 
         }
@@ -524,17 +711,28 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
         {
             try
             {
-                UIAPIRawForm.Freeze(true);
-                for (int i = 1; i <= _guiaMatrix.RowCount; i++)
+                if (_enviarSunatButton.IsEnabled())
                 {
-                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+                    ApplicationInterfaceHelper.ShowDialogMessageBox("¿Está seguro de enviar las guías a SUNAT?",
+                    () =>
+                    {
+                        UIAPIRawForm.Freeze(true);
+                        for (int i = 1; i <= _guiaMatrix.RowCount; i++)
+                        {
+                            var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
 
-                    //((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
-                    var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
-                    _liquidacionTarjetaDomain.ActualizarEnvioSunat(numeracion);
+                            //((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
+                            var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                            _liquidacionTarjetaDomain.ActualizarEnvioSunat(numeracion);
 
-
+                        }
+                        ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizó el estado de SUNAT de las guías de remisión");
+                    },
+                    null);
                 }
+
+
+
 
             }
             catch (Exception ex)
@@ -545,23 +743,29 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             finally
             {
                 UIAPIRawForm.Freeze(false);
-                ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizó el estado de SUNAT de las guías de remisión");
+
             }
 
         }
 
         private void Form_DataLoadAfter(ref BusinessObjectInfo pVal)
         {
+            _crearButton.Caption = "Programar";
             _guiaMatrix.AutoResizeColumns();
-            if (_estadoComboBox.Selected.Value == "T")
-            {
-                _enviarSunatButton.Item.Enabled = true;
-                _terminarProButton.Item.Enabled = false;
-                _programarButton.Item.Enabled = false;
-                _desprogramarButton.Item.Enabled = false;
+            //if (_estadoComboBox.Selected.Value == "T")
+            //{
+            //    _enviarSunatButton.Item.Enabled = true;
+            //    _terminarProButton.Item.Enabled = false;
+            //    _programarButton.Item.Enabled = false;
+            //    _desprogramarButton.Item.Enabled = false;
+            //    _filtrarButton.Item.Enabled = false;
+            //    _programadosComboBox.Item.Enabled = false;
+            //}
+            //else
+            //{
 
-            }
-            _filtrarButton.Item.Enabled = false;
+            //}
+            bloquearCampos();
         }
 
         static byte[] DecodePdfText(string pdfText)
@@ -575,11 +779,11 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
 
         private void Button3_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-          
+
 
         }
 
-        private LinkedButton LinkedButton0;
+        private LinkedButton linkedButonHojaRuta;
 
         private void Form_LoadAfter(SBOItemEventArg pVal)
         {
@@ -623,6 +827,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 _programarButton.Item.Enabled = false;
                 _desprogramarButton.Item.Enabled = false;
                 _filtrarButton.Item.Enabled = false;
+                _programadosComboBox.Item.Enabled = false;
 
             }
             else if (_estadoComboBox.Selected.Value == "O")
@@ -632,12 +837,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 _programarButton.Item.Enabled = true;
                 _desprogramarButton.Item.Enabled = true;
                 _filtrarButton.Item.Enabled = true;
+                _programadosComboBox.Item.Enabled = true;
+            }
 
-            }
-            if (UIAPIRawForm.Mode != BoFormMode.fm_ADD_MODE)
-            {
-                _filtrarButton.Item.Enabled = false;
-            }
 
         }
 
@@ -670,7 +872,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
 
             // Crear una instancia del informe de Crystal Reports
             ReportDocument reportDocument = new ReportDocument();
-      
+
             try
             {
                 PrinterSettings printerSettings = new PrinterSettings();
@@ -687,11 +889,14 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 }
 
                 var sPath = System.Windows.Forms.Application.StartupPath;
+
+                var rutaCrystal = _settingsDomain.RutaCompartida.Value;
+
                 // Cargar el archivo del informe de Crystal Reports
                 try
                 {
 
-                    reportDocument.Load(@"\\192.168.1.215\Compartida\ReporteAsignacionRuta.rpt");
+                    reportDocument.Load($@"{rutaCrystal}\ReporteAsignacionRuta.rpt");
                     //reportDocument.Load(@"C:\Reporte\ReporteAsignacionRuta.rpt"); // Reemplaza "ruta\al\informe.rpt" con la ruta real de tu informe
 
                 }
@@ -704,7 +909,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
 
 
 
-                reportDocument.SetDatabaseLogon("SAPINST", "Passw0rd");
+                reportDocument.SetDatabaseLogon(_settingsDomain.UserDB.Value, _settingsDomain.PassDB.Value);
                 reportDocument.SetParameterValue(0, _codigoHojaEditText.Value);
                 // Asignar el informe al visor de informes
                 //crystalReportViewer.ReportSource = reportDocument;
@@ -712,7 +917,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 reportDocument.PrintOptions.PrinterName = impresoraDefecto;
                 reportDocument.PrintToPrinter(1, true, 1, 1);
 
- 
+
             }
             catch (Exception ex)
             {
@@ -812,12 +1017,118 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
         private void _guiaMatrix_ValidateAfter(object sboObject, SBOItemEventArg pVal)
         {
             bloquearCampos();
+            actualizarTotales();
 
         }
 
         private void _guiaMatrix_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
             bloquearCampos();
+            actualizarTotales();
+            _crearButton.Caption = "Programar";
+        }
+
+        private void actualizarTotales()
+        {
+            try
+            {
+                var totalcargado = 0.00;
+                var cantidadbultos = 0.00;
+                for (int i = 1; i <= _guiaMatrix.RowCount; i++)
+                {
+                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+                    if (check.Checked)
+                    {
+                        var peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(i).Specific).Value;
+                        var cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific).Value;
+
+                        totalcargado += peso.ToDouble();
+                        cantidadbultos += cantidadBultos.ToDouble();
+                    }
+
+                }
+
+                _totalCargadoEditText.Value = totalcargado.ToString();
+                _cantidadBultosEditText.Value = cantidadbultos.ToString();
+                _diferenciaEditText.Value = (_cargaUtil.Value.ToDouble() - totalcargado).ToString();
+            }
+            catch (Exception ex)
+            {
+                ApplicationInterfaceHelper.ShowErrorStatusBarMessage("Error al actualizar totales : " + ex.Message);
+            }
+
+        }
+
+        private void Form_DataAddAfter(ref BusinessObjectInfo pVal)
+        {
+          
+
+        }
+
+        private void Form_DataAddBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+
+           
+        }
+
+        private Button _cancelarButton;
+
+        private void _cancelarButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            if (_cancelarButton.IsEnabled())
+            {
+                try
+                {
+                    if (_estadoComboBox.Selected.Value == "T")
+                    {
+                        for (int i = 1; i <= _guiaMatrix.RowCount; i++)
+                        {
+                            
+                            //((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
+                            var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                            var validacion= _liquidacionTarjetaDomain.ValidarSunat(numeracion);
+                            if (validacion.Item1)
+                            {
+                                throw new Exception("No se puede cancelar si ya hay guías validadas por SUNAT");
+                            }
+
+                        }
+                    }
+                    ApplicationInterfaceHelper.ShowDialogMessageBox("¿Está seguro de cancelar la programación?",
+                            () =>
+                            {
+                                UIAPIRawForm.Freeze(true);
+                                _estadoComboBox.SelectByValue("C");
+
+                                _liquidacionTarjetaDomain.ActualizarEstadoHojaGuia("C", _codigoHojaEditText.Value);
+                                _enviarSunatButton.Item.Enabled = false;
+                                _terminarProButton.Item.Enabled = false;
+                                _programarButton.Item.Enabled = false;
+                                _desprogramarButton.Item.Enabled = false;
+
+                                UIAPIRawForm.Refresh();
+                                //if (_crearButton.Caption != "OK")
+                                //    _crearButton.Item.Click();
+
+                                ApplicationInterfaceHelper.ShowSuccessStatusBarMessage("Se actualizó la hoja de ruta de asignación");
+                            },
+                             null);
+
+
+
+                }
+                catch (Exception ex)
+                {
+                    ApplicationInterfaceHelper.ShowErrorStatusBarMessage(ex.Message);
+                }
+                finally
+                {
+                    UIAPIRawForm.Freeze(false);
+
+                }
+
+            }
 
         }
     }

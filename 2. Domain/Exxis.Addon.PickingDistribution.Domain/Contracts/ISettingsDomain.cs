@@ -41,5 +41,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain.Contracts
 
         OPDS RoundValue { get; }
 
+        OPDS RutaCompartida { get; }
+        OPDS UserDB { get; }
+        OPDS PassDB { get; }
+
     }
 }

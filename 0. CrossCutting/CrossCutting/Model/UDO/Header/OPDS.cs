@@ -48,6 +48,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header
             public const string DBUSER = "DBUSER";
             public const string DBPASS = "DBPASS";
             public const string SERVER = "SERVER";
+            public const string RUTA_COMPARTIDA = "COMPARTIDO";
+
 
 
             public const string IP_SERVICE_LAYER = "IPS_SL";

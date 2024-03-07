@@ -146,7 +146,16 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain
         => UnitOfWork.SettingsRepository.Setting(OPDS.Codes.ACCOUNT_COMISION);
 
         public OPDS RoundValue
-      => UnitOfWork.SettingsRepository.Setting(OPDS.Codes.ROUND_VALUE);
+        => UnitOfWork.SettingsRepository.Setting(OPDS.Codes.ROUND_VALUE);
+
+        public OPDS RutaCompartida
+            => UnitOfWork.SettingsRepository.Setting(OPDS.Codes.RUTA_COMPARTIDA);
+
+        public OPDS UserDB
+           => UnitOfWork.SettingsRepository.Setting(OPDS.Codes.DBUSER);
+
+        public OPDS PassDB
+           => UnitOfWork.SettingsRepository.Setting(OPDS.Codes.DBPASS);
 
     }
 }

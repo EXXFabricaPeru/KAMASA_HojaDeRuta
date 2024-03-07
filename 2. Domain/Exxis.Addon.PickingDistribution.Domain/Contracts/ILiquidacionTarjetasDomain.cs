@@ -43,6 +43,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain.Contracts
         void ActualizarEstadoHojaGuia(string estado, string codigo);
         Tuple<bool, string> GetCargaUtilByPlaca(string placa);
         Tuple<bool, byte[]> ObtenerPDF(string numeracion);
+        Tuple<bool, string> ValidarSunat(string numeracion);
         //Tuple<bool,CrossCutting.Model.System.Header.OCRD> retrieveTransportista(string code);
     }
 }

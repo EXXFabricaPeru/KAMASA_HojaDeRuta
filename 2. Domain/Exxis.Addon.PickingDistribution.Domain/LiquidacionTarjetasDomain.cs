@@ -135,6 +135,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain
             return UnitOfWork.LiquidacionTarjetasRepository.ObtenerPDF(numeracion);
         }
 
-        
+        public Tuple<bool, string> ValidarSunat(string placa)
+        {
+            return UnitOfWork.LiquidacionTarjetasRepository.ValidarSunat(placa);
+        }
     }
 }

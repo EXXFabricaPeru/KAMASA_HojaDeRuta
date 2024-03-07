@@ -583,7 +583,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
             try
             {
                 var r1 = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
-                var val = "select* from \"@EX_HR_OHGR\"  where \"U_EXK_COD\" = '{0}'   and \"Canceled\"='N' ";
+                var val = "select* from \"@EX_HR_OHGR\"  where \"U_EXK_COD\" = '{0}'   and \"U_EXK_EST\" in ('O','T') ";
                 r1.DoQuery(string.Format(val, value));
                 while (!r1.EoF)
                 {
@@ -717,7 +717,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 //var list= TiendasList(Login);
 
                 var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
-                var query = " select LPAD(Count(*) + 1, LENGTH(Count(*) + 1) + 2, '0') as \"count\" from \"@EX_HR_OHGR\" ";
+                var query = " select LPAD(Count(*) + 1, 3, '0') as \"count\" from \"@EX_HR_OHGR\" ";
                 recordSet.DoQuery(string.Format(query));
 
                 while (!recordSet.EoF)
@@ -802,7 +802,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 var document = documentRepository.RetrieveDocuments(t => t.FolioPref == foliopref && t.FolioNum == folionum).FirstOrDefault();
 
                 document.EstadoEnvioSunat = "Y";
-                document.EstadoSUNAT = "AUT";
+                //document.EstadoSUNAT = "AUT";
                 documentRepository.UpdateCustomFieldsFromDocument(document);
                 //var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
                 //var query = " update ODLN where \"FolioPref\"='{0}' and \"FolioNum\"={1}";
@@ -829,66 +829,36 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                     recordSetIDCompany.MoveNext();
                 }
 
-                HanaConnectionStringBuilder connBuilder = new HanaConnectionStringBuilder();
-                connBuilder.Server = "192.168.1.215:30013";
-                connBuilder.UserName = "SAPINST";
-                connBuilder.Password = "Passw0rd";
-                connBuilder.Database = "SBO_KAMASA_CAPACITACION";
-                //connBuilder.
 
+                var rvalidar = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
+                var queryvalidar = "SELECT count(*) as \"existe\" FROM \"FEX_PE\".\"FEX_DOCUMENTOS\" where \"IdFexCompany\" = {0} and \"Docentry\" = {1} and \"ObjectType\" = {2}";
+                rvalidar.DoQuery(string.Format(queryvalidar, IdFexCompany, document.DocumentEntry,15));
 
-                //using (HanaConnection connection = new HanaConnection(connBuilder.ToString())
-                //using (HanaConnection connection = new HanaConnection())
-                //using (HanaConnection connection = new HanaConnection("Server=192.168.1.215:30015;CS=SBO_KAMASA_CAPACITACION;UserID=SAPINST;Password=Passw0rd"))
-                //{
-                //    try
-                //    {
-                //        // Abrir la conexión
-                //        connection.Open();
+                int  existe = 0;
+                while (!rvalidar.EoF)
+                {
+                    existe = rvalidar.GetColumnValue("existe").ToInt32 ();
+                    rvalidar.MoveNext();
+                }
 
-                //        // Crear un comando SQL para ejecutar la consulta
-                //        // string query2 = "SELECT * FROM \"FEX_PE\".\"FEX_DOCUMENTOS\" WHERE \"IdFexCompany\" = 7 AND \"IdDocumento\" = 180 ";
-                //        var query = "Call \"FEX_PE\".\"FEX_ACCION_Guardar\"( " +
-                //         "  0," +//  --IN IdAccion bigint.  0 Para Insert.  Valor de IdAccion para actualizar registro existente
-                //         IdFexCompany + ", " +//    --IN IdFexCompany int.Valor de Company para documento actual
-                //           "'" + document.Indicator + "'," + //--IN CodigoEntidad varchar(50).
-                //          +document.DocumentEntry + "," +// --IN DocEntry int.
-                //         "'" + document.ObjectType + "'," +//   --IN ObjectType varchar(50).
-                //         "'" + document.DocSubType + "', " + //   --IN DocSubType varchar(50).
-                //         " '100',  " +//  --IN IdTipoAccion int.
-                //         "  'VIG', " +//   --IN Estado varchar(50).
-                //         "'" + DateTime.Now.ToString() + "'" + //--IN FechaCreacion varchar(70)
-                //         "); ";
-                //        using (HanaCommand command = new HanaCommand(query, connection))
-                //        {
-                //            command.CommandType = CommandType.StoredProcedure;
-                //            command.ExecuteNonQuery();
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        throw new Exception(ex.Message);
-                //    }
-                //}
+                if (existe == 0)
+                {
+                    var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
+                    var query = "Call \"FEX_PE\".\"FEX_ACCION_Guardar\"( " +
+                        "  0," +//  --IN IdAccion bigint.  0 Para Insert.  Valor de IdAccion para actualizar registro existente
+                        IdFexCompany + ", " +//    --IN IdFexCompany int.Valor de Company para documento actual
+                          "'" + document.Indicator + "'," + //--IN CodigoEntidad varchar(50).
+                         +document.DocumentEntry + "," +// --IN DocEntry int.
+                        "'" + document.ObjectType + "'," +//   --IN ObjectType varchar(50).
+                        "'" + document.DocSubType + "', " + //   --IN DocSubType varchar(50).
+                     " '100',  " +//  --IN IdTipoAccion int.
+                                    "  'VIG', " +//   --IN Estado varchar(50).
+                     "'" + DateTime.Now.ToString() + "'" + //--IN FechaCreacion varchar(70)
+                     "); ";
+                    recordSet.DoQuery(string.Format(query));
+                }
 
-                var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
-                var query = "Call \"FEX_PE\".\"FEX_ACCION_Guardar\"( " +
-                    "  0," +//  --IN IdAccion bigint.  0 Para Insert.  Valor de IdAccion para actualizar registro existente
-                    IdFexCompany + ", " +//    --IN IdFexCompany int.Valor de Company para documento actual
-                      "'" + document.Indicator + "'," + //--IN CodigoEntidad varchar(50).
-                     +document.DocumentEntry + "," +// --IN DocEntry int.
-                    "'" + document.ObjectType + "'," +//   --IN ObjectType varchar(50).
-                    "'" + document.DocSubType + "', " + //   --IN DocSubType varchar(50).
-                 " '100',  " +//  --IN IdTipoAccion int.
-                                "  'VIG', " +//   --IN Estado varchar(50).
-                 "'" + DateTime.Now.ToString() + "'" + //--IN FechaCreacion varchar(70)
-                 "); ";
-                recordSet.DoQuery(string.Format(query));
-
-
-
-
-
+             
 
             }
             catch (Exception ex)
@@ -979,12 +949,6 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
 
 
 
-               
-                //connBuilder.Server = "192.168.1.215:30013";
-                //connBuilder.UserName = "SAPINST";
-                //connBuilder.Password = "Passw0rd";
-                //connBuilder.Database = "SBO_KAMASA_CAPACITACION";
-                //connBuilder.
                 BaseOPDSRepository configRepository = new UnitOfWork(Company).SettingsRepository;
                 var user=configRepository.Setting(OPDS.Codes.DBUSER);
                 var pass = configRepository.Setting(OPDS.Codes.DBPASS);
@@ -1051,6 +1015,37 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
             catch (Exception ex)
             {
                 return Tuple.Create(false, res);
+            }
+            finally
+            {
+                GenericHelper.ReleaseCOMObjects();
+            }
+        }
+
+        public override Tuple<bool, string> ValidarSunat(string sunat)
+        {
+            try
+            {
+                var list = sunat.Split("-");
+                BaseSAPDocumentRepository<ODLN, DLN1> documentRepository = new UnitOfWork(Company).DeliveryRepository;
+                string foliopref = list[0];
+                int folionum = list[1].ToInt32();
+                var document = documentRepository.RetrieveDocuments(t => t.FolioPref == foliopref && t.FolioNum == folionum).FirstOrDefault();
+
+                if (document.EstadoSUNAT == "AUT")
+                {
+                    return Tuple.Create(true, "validado");
+                }
+                else{
+                    return Tuple.Create(false, "sin validar");
+                }
+            
+
+
+            }
+            catch (Exception ex)
+            {
+                return Tuple.Create(false, ex.Message);
             }
             finally
             {

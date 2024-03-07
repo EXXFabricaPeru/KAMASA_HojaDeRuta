@@ -15,7 +15,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header
     [Serializable]
     [UserDefinedTable(ID, DESCRIPTION)]
     [Udo(ID, SAPbobsCOM.BoUDOObjType.boud_MasterData, Description = DESCRIPTION)]
-    [UDOServices(FindServices.DefinedFields, CanDelete = false,CanCancel =true)]
+    [UDOServices(FindServices.DefinedFields, CanDelete = false,CanCancel =false)]
     [DefaultForm(SAPbobsCOM.BoYesNoEnum.tYES)]
     public class OHRG : BaseUDO
     {
@@ -75,9 +75,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header
 
 
         [FormColumn(14), FieldNoRelated(@"U_EXK_PROG", @"Programados", BoDbTypes.Alpha, Size = 2)]
-        [Val("Y","Si")]
         [Val("N","No")]
-        [Val("B", "Ambos")]
         public string SupplierTransferModality { get; set; }
 
 
