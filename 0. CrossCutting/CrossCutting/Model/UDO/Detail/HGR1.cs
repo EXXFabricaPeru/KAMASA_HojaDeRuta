@@ -34,7 +34,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Detail
         [EnhancedColumn(2), FieldNoRelated("U_EXK_GUIA", "G. Remisión", BoDbTypes.Alpha, Size = 50)]
         public string GuiaRemision { get; set; }
 
-        [EnhancedColumn(3), FieldNoRelated("U_EXK_PESO", "Pedo Kg.", BoDbTypes.Quantity)]
+        [EnhancedColumn(3), FieldNoRelated("U_EXK_PESO", "Peso Kg.", BoDbTypes.Quantity)]
         public double PesoKG { get; set; }
 
         [EnhancedColumn(4), FieldNoRelated("U_EXK_CANTB", "Cant. Bultos", BoDbTypes.Quantity)]

@@ -93,11 +93,9 @@
   <ItemGroup>
     <Compile Include="AuxiliaryDomain.cs" />
     <Compile Include="BatchDomain.cs" />
-    <Compile Include="BeetrackDomain.cs" />
     <Compile Include="Code\BaseDomain.cs" />
     <Compile Include="Code\IBaseDomain.cs" />
     <Compile Include="Contracts\IBatchDomain.cs" />
-    <Compile Include="Contracts\IBeetrackDomain.cs" />
     <Compile Include="Contracts\IEDIDomain.cs" />
     <Compile Include="Contracts\IItemDomain.cs" />
     <Compile Include="Contracts\ILiquidacionTarjetasDomain.cs" />
@@ -106,7 +104,6 @@
     <Compile Include="Contracts\IReportDomain.cs" />
     <Compile Include="Contracts\IReturnOrderDomain.cs" />
     <Compile Include="Contracts\ITransferStockDomain.cs" />
-    <Compile Include="Contracts\ITransporterTariffDomain.cs" />
     <Compile Include="EDIDomain.cs" />
     <Compile Include="EDIProcessor\ExcelEDIProcessor.cs" />
     <Compile Include="EDIStrategy\BaseEDIStrategy.cs" />
@@ -124,27 +121,19 @@
     <Compile Include="Contracts\IAuxiliaryDomain.cs" />
     <Compile Include="Contracts\IDirectionsDomain.cs" />
     <Compile Include="Contracts\IDocumentMarketingDomain.cs" />
-    <Compile Include="Contracts\IDriverDomain.cs" />
     <Compile Include="Contracts\IFileDomain.cs" />
     <Compile Include="Contracts\IInfrastructureDomain.cs" />
     <Compile Include="Contracts\IMarketingDocumentDomain.cs" />
-    <Compile Include="Contracts\IRouteDomain.cs" />
     <Compile Include="Contracts\ISaleOrderDomain.cs" />
     <Compile Include="Contracts\ISettingsDomain.cs" />
-    <Compile Include="Contracts\ITransferOrderDomain.cs" />
-    <Compile Include="Contracts\ITransporterDomain.cs" />
     <Compile Include="Contracts\IWarehouseDomain.cs" />
     <Compile Include="DirectionsDomain.cs" />
-    <Compile Include="DriverDomain.cs" />
     <Compile Include="FilesDomain.cs" />
     <Compile Include="InfrastructureDomain.cs" />
     <Compile Include="MarketingDocumentDomain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteDomain.cs" />
     <Compile Include="SettingsDomain.cs" />
     <Compile Include="TransferStockDomain.cs" />
-    <Compile Include="TransporterDomain.cs" />
-    <Compile Include="TransporterTariffDomain.cs" />
     <Compile Include="WarehouseDomain.cs" />
   </ItemGroup>
   <ItemGroup>
