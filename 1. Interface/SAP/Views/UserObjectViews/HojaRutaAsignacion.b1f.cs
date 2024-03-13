@@ -285,14 +285,15 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                                 foreach (var item in lista)
                                 {
                                     _guiaMatrix.AddRow();
-                                    ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(cont).Specific).Check();// = item.NumberAtCard;
-                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(cont).Specific).Value = item.NumberAtCard;
-                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(cont).Specific).Value = item.Peso;
-                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(cont).Specific).Value = item.CantidadBultos.ToString();
-                                    ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(cont).Specific).SelectByValue(item.Programado);
-                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(cont).Specific).Value = item.Zona;
-                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(cont).Specific).Value = item.DireccionDespacho;
-                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(cont).Specific).Value = item.DepProvZona;
+                                    ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(cont).Specific).Check();// = item.NumberAtCard;
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDocEntry).Cells.Item(cont).Specific).Value = item.DocumentEntry.ToString();
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(cont).Specific).Value = item.NumberAtCard;
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaPeso).Cells.Item(cont).Specific).Value = item.Peso;
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaCantBultos).Cells.Item(cont).Specific).Value = item.CantidadBultos.ToString();
+                                    ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(ColumnaProgramado).Cells.Item(cont).Specific).SelectByValue(item.Programado);
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaZona).Cells.Item(cont).Specific).Value = item.Zona;
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDireccion).Cells.Item(cont).Specific).Value = item.DireccionDespacho;
+                                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDepartamento).Cells.Item(cont).Specific).Value = item.DepProvZona;
                                     cont++;
 
                                     totalcargado += item.Peso.ToDouble();
@@ -371,30 +372,32 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 {
                     detailGrilla line = new detailGrilla();
 
-                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
-                    var programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).Selected.Value;
+                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(i).Specific);
+                    var programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(ColumnaProgramado).Cells.Item(i).Specific).Selected.Value;
                     if (check.Checked)
                     {
-                        line.seleccionar = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific).Checked;
-                        line.numeroGuia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
-                        line.peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(i).Specific).Value;
-                        line.cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific).Value;
-                        line.programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).Selected.Value;
-                        line.zona = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(i).Specific).Value;
-                        line.direccion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(i).Specific).Value;
-                        line.departamento = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(i).Specific).Value;
+                        line.seleccionar = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(i).Specific).Checked;
+                        line.docEntry = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDocEntry).Cells.Item(i).Specific).Value;
+                        line.numeroGuia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(i).Specific).Value;
+                        line.peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaPeso).Cells.Item(i).Specific).Value;
+                        line.cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaCantBultos).Cells.Item(i).Specific).Value;
+                        line.programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(ColumnaProgramado).Cells.Item(i).Specific).Selected.Value;
+                        line.zona = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaZona).Cells.Item(i).Specific).Value;
+                        line.direccion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDireccion).Cells.Item(i).Specific).Value;
+                        line.departamento = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDepartamento).Cells.Item(i).Specific).Value;
                         list.Add(line);
                     }
                     else if (programado == "Y")
                     {
-                        line.seleccionar = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific).Checked;
-                        line.numeroGuia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
-                        line.peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(i).Specific).Value;
-                        line.cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific).Value;
-                        line.programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).Selected.Value;
-                        line.zona = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(i).Specific).Value;
-                        line.direccion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(i).Specific).Value;
-                        line.departamento = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(i).Specific).Value;
+                        line.seleccionar = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(i).Specific).Checked;
+                        line.docEntry = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDocEntry).Cells.Item(i).Specific).Value;
+                        line.numeroGuia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(i).Specific).Value;
+                        line.peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaPeso).Cells.Item(i).Specific).Value;
+                        line.cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaCantBultos).Cells.Item(i).Specific).Value;
+                        line.programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(ColumnaProgramado).Cells.Item(i).Specific).Selected.Value;
+                        line.zona = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaZona).Cells.Item(i).Specific).Value;
+                        line.direccion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDireccion).Cells.Item(i).Specific).Value;
+                        line.departamento = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDepartamento).Cells.Item(i).Specific).Value;
                         list.Add(line);
                     }
                 }
@@ -408,14 +411,15 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 foreach (var item in list)
                 {
                     _guiaMatrix.AddRow();
-                    ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(cont).Specific).Check();
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(cont).Specific).Value = item.numeroGuia;
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(cont).Specific).Value = item.peso;
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(cont).Specific).Value = item.cantidadBultos.ToString();
-                    ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(cont).Specific).SelectByValue(item.programado);
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(cont).Specific).Value = item.zona;
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(cont).Specific).Value = item.direccion;
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(cont).Specific).Value = item.departamento;
+                    ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(cont).Specific).Check();
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDocEntry).Cells.Item(cont).Specific).Value = item.docEntry;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(cont).Specific).Value = item.numeroGuia;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaPeso).Cells.Item(cont).Specific).Value = item.peso;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaCantBultos).Cells.Item(cont).Specific).Value = item.cantidadBultos.ToString();
+                    ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(ColumnaProgramado).Cells.Item(cont).Specific).SelectByValue(item.programado);
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaZona).Cells.Item(cont).Specific).Value = item.zona;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDireccion).Cells.Item(cont).Specific).Value = item.direccion;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDepartamento).Cells.Item(cont).Specific).Value = item.departamento;
                     cont++;
 
                     totalcargado += item.peso.ToDouble();
@@ -442,6 +446,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
         public class detailGrilla
         {
             public bool seleccionar { get; set; }
+            public string docEntry { get; set; }
             public string numeroGuia { get; set; }
             public string peso { get; set; }
             public string cantidadBultos { get; set; }
@@ -450,6 +455,16 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             public string direccion { get; set; }
             public string departamento { get; set; }
         }
+
+        private static string ColumnaSeleccionar = "Col_0";
+        private static string ColumnaDocEntry = "Col_1";
+        private static string ColumnaNumeroGuia = "C_0_1";
+        private static string ColumnaPeso = "C_0_2";
+        private static string ColumnaCantBultos = "C_0_3";
+        private static string ColumnaProgramado = "C_0_4";
+        private static string ColumnaZona = "C_0_5";
+        private static string ColumnaDireccion = "C_0_6";
+        private static string ColumnaDepartamento = "C_0_7";
 
         private Button _programarButton;
 
@@ -486,14 +501,14 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
 
                 for (int i = 1; i <= _guiaMatrix.RowCount; i++)
                 {
-                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
-                    var cantBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific);
-                    var numguia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific);
+                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(i).Specific);
+                    var cantBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaCantBultos).Cells.Item(i).Specific);
+                    var numguia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(i).Specific);
                     if (check.Checked)
                     {
                         if (cantBultos.Value.ToDouble() > 0)
                         {
-                            ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("Y");
+                            ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(ColumnaProgramado).Cells.Item(i).Specific).SelectByValue("Y");
 
                             datosguia.CantidadBultos = cantBultos.Value.ToDouble();
                             _liquidacionTarjetaDomain.ActualizarProgramado(numguia.Value, "Y", datosguia);
@@ -569,24 +584,25 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 for (int i = 1; i <= _guiaMatrix.RowCount; i++)
                 {
                     detailGrilla line = new detailGrilla();
-                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
-                    var programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).Selected.Value;
+                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(i).Specific);
+                    var programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(ColumnaProgramado).Cells.Item(i).Specific).Selected.Value;
                     if (check.Checked)
                     {
-                        ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
-                        var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                        ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(ColumnaProgramado).Cells.Item(i).Specific).SelectByValue("N");
+                        var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(i).Specific).Value;
                         _liquidacionTarjetaDomain.ActualizarProgramado(numeracion, "N", datosguia);
                     }
                     else 
                     {
-                        line.seleccionar = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific).Checked;
-                        line.numeroGuia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
-                        line.peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(i).Specific).Value;
-                        line.cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific).Value;
-                        line.programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).Selected.Value;
-                        line.zona = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(i).Specific).Value;
-                        line.direccion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(i).Specific).Value;
-                        line.departamento = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(i).Specific).Value;
+                        line.seleccionar = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(i).Specific).Checked;
+                        line.docEntry = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDocEntry).Cells.Item(i).Specific).Value;
+                        line.numeroGuia = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(i).Specific).Value;
+                        line.peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaPeso).Cells.Item(i).Specific).Value;
+                        line.cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaCantBultos).Cells.Item(i).Specific).Value;
+                        line.programado = ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(ColumnaProgramado).Cells.Item(i).Specific).Selected.Value;
+                        line.zona = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaZona).Cells.Item(i).Specific).Value;
+                        line.direccion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDireccion).Cells.Item(i).Specific).Value;
+                        line.departamento = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDepartamento).Cells.Item(i).Specific).Value;
                         list.Add(line);
                     }
                 }
@@ -601,14 +617,15 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 foreach (var item in list)
                 {
                     _guiaMatrix.AddRow();
-                    ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(cont).Specific).Check();
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(cont).Specific).Value = item.numeroGuia;
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(cont).Specific).Value = item.peso;
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(cont).Specific).Value = item.cantidadBultos.ToString();
-                    ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(cont).Specific).SelectByValue(item.programado);
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(6).Cells.Item(cont).Specific).Value = item.zona;
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(7).Cells.Item(cont).Specific).Value = item.direccion;
-                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(8).Cells.Item(cont).Specific).Value = item.departamento;
+                    ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(cont).Specific).Check();
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDocEntry).Cells.Item(cont).Specific).Value = item.docEntry;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(cont).Specific).Value = item.numeroGuia;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaPeso).Cells.Item(cont).Specific).Value = item.peso;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaCantBultos).Cells.Item(cont).Specific).Value = item.cantidadBultos.ToString();
+                    ((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(ColumnaProgramado).Cells.Item(cont).Specific).SelectByValue(item.programado);
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaZona).Cells.Item(cont).Specific).Value = item.zona;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDireccion).Cells.Item(cont).Specific).Value = item.direccion;
+                    ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDepartamento).Cells.Item(cont).Specific).Value = item.departamento;
                     cont++;
 
                     totalcargado += item.peso.ToDouble();
@@ -719,10 +736,10 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                         UIAPIRawForm.Freeze(true);
                         for (int i = 1; i <= _guiaMatrix.RowCount; i++)
                         {
-                            var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+                            var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(i).Specific);
 
                             //((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
-                            var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                            var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(i).Specific).Value;
                             _liquidacionTarjetaDomain.ActualizarEnvioSunat(numeracion);
 
                         }
@@ -955,12 +972,12 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
 
                 for (int i = 1; i <= _guiaMatrix.RowCount; i++)
                 {
-                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(i).Specific);
 
                     if (check.Checked)
                     {
                         //((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
-                        var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                        var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(i).Specific).Value;
                         var odfstream = _liquidacionTarjetaDomain.ObtenerPDF(numeracion);
 
                         if (odfstream.Item1)
@@ -1036,11 +1053,11 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 var cantidadbultos = 0.00;
                 for (int i = 1; i <= _guiaMatrix.RowCount; i++)
                 {
-                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(1).Cells.Item(i).Specific);
+                    var check = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(i).Specific);
                     if (check.Checked)
                     {
-                        var peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(3).Cells.Item(i).Specific).Value;
-                        var cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(4).Cells.Item(i).Specific).Value;
+                        var peso = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaPeso).Cells.Item(i).Specific).Value;
+                        var cantidadBultos = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaCantBultos).Cells.Item(i).Specific).Value;
 
                         totalcargado += peso.ToDouble();
                         cantidadbultos += cantidadBultos.ToDouble();
@@ -1086,7 +1103,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                         {
                             
                             //((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
-                            var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(2).Cells.Item(i).Specific).Value;
+                            var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(i).Specific).Value;
                             var validacion= _liquidacionTarjetaDomain.ValidarSunat(numeracion);
                             if (validacion.Item1)
                             {

@@ -53,5 +53,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Detail
         [EnhancedColumn(8), FieldNoRelated("U_EXK_DEPA", "Departamento - Provincia - Distrito", BoDbTypes.Alpha, Size = 254)]
         public string DepartamentoProvDis { get; set; }
 
+        [EnhancedColumn(9), FieldNoRelated("U_EXK_DOCE", "DocEntry", BoDbTypes.Alpha, Size = 50)]
+        public int DocEntry { get; set; }
+
     }
 }

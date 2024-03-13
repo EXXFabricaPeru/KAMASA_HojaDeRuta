@@ -660,7 +660,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 var query = "select (select \"Name\" from \"@EXK_ZONAVENTA\" where \"Code\"=D.\"U_EXK_AGENZONA\") as \"ZonaAgencia\", " +
                     " ZN.\"Name\" , D.*  from \"ODLN\" D join  \"DLN12\" D12 on D12.\"DocEntry\"=D.\"DocEntry\" " +
                     " LEFT JOIN \"@EXK_ZONAVENTA\" ZN on ZN.\"Code\"=D12.\"U_EXX_TPED_ZONAS\" " +
-                    " where \"FolioPref\" is not null and \"DocDate\">= TO_DATE('{0}', 'YYYYMMDD') and \"DocDate\"<= TO_DATE('{1}', 'YYYYMMDD') {2} ";
+                    " LEFT JOIN \"OSHP\" SH on SH.\"TrnspCode\"=D.\"TrnspCode\" OR D.\"TrnspCode\"=-1 " +
+                    " where \"FolioPref\" is not null and \"DocDate\">= TO_DATE('{0}', 'YYYYMMDD') and \"DocDate\"<= TO_DATE('{1}', 'YYYYMMDD') {2} " +
+                    " AND SH.\"TrnspName\"<>'Recojo'";
                 recordSet.DoQuery(string.Format(query, desde, hasta, queryprogram));
 
                 var ex = string.Format(query, desde, hasta, queryprogram);
@@ -668,6 +670,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 {
                     ODLN Guias = new ODLN();
 
+                    Guias.DocumentEntry = recordSet.GetColumnValue("DocEntry").ToString().ToInt32();
                     Guias.NumberAtCard = recordSet.GetColumnValue("FolioPref").ToString() + "-" + recordSet.GetColumnValue("FolioNum").ToString();
                     Guias.Peso = recordSet.GetColumnValue("U_EXX_FE_GRPESOTOTAL").ToString();
                     Guias.CantidadBultos = (recordSet.GetColumnValue("U_EXK_CANTBULTO") == null) ? 0 : recordSet.GetColumnValue("U_EXK_CANTBULTO").ToInt32();
