@@ -658,9 +658,12 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                 }
                 var recordSet = Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx).To<RecordsetEx>();
                 var query = "select (select \"Name\" from \"@EXK_ZONAVENTA\" where \"Code\"=D.\"U_EXK_AGENZONA\") as \"ZonaAgencia\", " +
-                    " ZN.\"Name\" , D.*  from \"ODLN\" D join  \"DLN12\" D12 on D12.\"DocEntry\"=D.\"DocEntry\" " +
+                    " ZN.\"Name\", ST.\"Name\" as  \"DepAgencia\", CR.\"County\" as \"ProvAgencia\", CR.\"ZipCode\" as \"DisAgencia\", " +
+                    " D.*  from \"ODLN\" D join  \"DLN12\" D12 on D12.\"DocEntry\"=D.\"DocEntry\" " +
                     " LEFT JOIN \"@EXK_ZONAVENTA\" ZN on ZN.\"Code\"=D12.\"U_EXX_TPED_ZONAS\" " +
                     " LEFT JOIN \"OSHP\" SH on SH.\"TrnspCode\"=D.\"TrnspCode\" OR D.\"TrnspCode\"=-1 " +
+                    " LEFT JOIN \"CRD1\" CR on CR.\"Address\" = D.\"U_EXK_AGENIDDIREC\" and CR.\"CardCode\" = D.\"U_EXK_AGENCOD\" "+
+                    " LEFT JOIN \"OCST\" ST on CR.\"State\" = ST.\"Code\" and ST.\"Country\" = CR.\"Country\" "+
                     " where \"FolioPref\" is not null and \"DocDate\">= TO_DATE('{0}', 'YYYYMMDD') and \"DocDate\"<= TO_DATE('{1}', 'YYYYMMDD') {2} " +
                     " AND SH.\"TrnspName\"<>'Recojo'";
                 recordSet.DoQuery(string.Format(query, desde, hasta, queryprogram));
@@ -677,20 +680,26 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                     Guias.Programado = recordSet.GetColumnValue("U_EXK_HRPROG").ToString();
                     var valAgencia = recordSet.GetColumnValue("U_EXK_AGENCOD") != null ? recordSet.GetColumnValue("U_EXK_AGENCOD").ToString() : "";
 
+                    var dept = "";
+                    var proc = "";
+                    var dist = "";
                     if (string.IsNullOrEmpty(valAgencia))
                     {
                         Guias.Zona = recordSet.GetColumnValue("Name") != null ? recordSet.GetColumnValue("Name").ToString() : "";
                         Guias.DireccionDespacho = recordSet.GetColumnValue("Address2")?.ToString();
-
+                        dept = recordSet.GetColumnValue("U_EXK_DPTO") != null ? recordSet.GetColumnValue("U_EXK_DPTO").ToString() : "";
+                        proc = recordSet.GetColumnValue("U_EXK_PROVINCIA") != null ? recordSet.GetColumnValue("U_EXK_PROVINCIA").ToString() : "";
+                        dist = recordSet.GetColumnValue("U_EXK_DISTRITO") != null ? recordSet.GetColumnValue("U_EXK_DISTRITO").ToString() : "";
                     }
                     else
                     {
                         Guias.Zona = recordSet.GetColumnValue("ZonaAgencia") != null ? recordSet.GetColumnValue("ZonaAgencia").ToString() : "";
                         Guias.DireccionDespacho = recordSet.GetColumnValue("U_EXK_AGENDIREC") != null ? recordSet.GetColumnValue("U_EXK_AGENDIREC").ToString() : "";
+                         dept = recordSet.GetColumnValue("DepAgencia") != null ? recordSet.GetColumnValue("DepAgencia").ToString() : "";
+                         proc = recordSet.GetColumnValue("ProvAgencia") != null ? recordSet.GetColumnValue("ProvAgencia").ToString() : "";
+                         dist = recordSet.GetColumnValue("DisAgencia") != null ? recordSet.GetColumnValue("DisAgencia").ToString() : "";
                     }
-                    var dept = recordSet.GetColumnValue("U_EXK_DPTO") != null ? recordSet.GetColumnValue("U_EXK_DPTO").ToString() : "";
-                    var proc = recordSet.GetColumnValue("U_EXK_PROVINCIA") != null ? recordSet.GetColumnValue("U_EXK_PROVINCIA").ToString() : "";
-                    var dist = recordSet.GetColumnValue("U_EXK_DISTRITO") != null ? recordSet.GetColumnValue("U_EXK_DISTRITO").ToString() : "";
+
                     Guias.DepProvZona = dept + "-" + proc + "-" + dist;
 
 
