@@ -335,6 +335,7 @@
     <Compile Include="Startup\Versions\Versioner.cs" />
     <Compile Include="Startup\Versions\Version_0_0_0_1.cs" />
     <Compile Include="Startup\Versions\Version_0_0_0_2.cs" />
+    <Compile Include="Startup\Versions\Version_0_0_0_7.cs" />
     <Compile Include="Startup\Versions\Version_0_0_0_6.cs" />
     <Compile Include="Startup\Versions\Version_0_0_0_5.cs" />
     <Compile Include="Startup\Versions\Version_0_0_0_4.cs" />

@@ -23,6 +23,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
             versionCollection.Add(Version_0_0_0_4.Make);
             versionCollection.Add(Version_0_0_0_5.Make);
             versionCollection.Add(Version_0_0_0_6.Make);
+            versionCollection.Add(Version_0_0_0_7.Make);
 
         }
 
