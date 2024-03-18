@@ -23,7 +23,6 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain.Contracts
 
         Tuple<bool, string> UpdateReturnRequestCustomFields(ORRR document);
 
-        Tuple<bool, string, string> RegisterDelivery(ODLN document, DocumentObjectTypeEnum obj , string FlowSource, ORDR order, bool isFR, OARD codRutaEntry, ORTR ordenTraslado, bool serieFija = false,bool isReprocesar =false);
 
         Tuple<bool, string, string> RegisterDocumentReturn(ODLN document, DocumentObjectTypeEnum obj, string FlowSource);
 

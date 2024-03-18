@@ -318,12 +318,6 @@
     <Compile Include="Code\UserInterface\ProgressBarBuilder.cs" />
     <Compile Include="Code\UserInterface\SelectItem.cs" />
     <Compile Include="Customizations\CatchEvents.cs" />
-    <Compile Include="Licencia\AddonVentura.cs" />
-    <Compile Include="Licencia\Criptor.cs" />
-    <Compile Include="Licencia\Global.cs" />
-    <Compile Include="Licencia\LicenceGUI.cs" />
-    <Compile Include="Licencia\Licencia.cs" />
-    <Compile Include="Licencia\VersionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Menu\FlowMenu.cs" />
     <Compile Include="Resources\Menu\BaseMenu.cs" />
@@ -382,18 +376,9 @@
     <Content Include="Destinos.xml" />
     <Content Include="FodyWeavers.xml" />
     <Content Include="Image\bottom_bar.png" />
-    <Content Include="rec\FormLicencias.srf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="rec\FormProductos.srf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Query\TransactionNotice\bpvs_LP_TN_OP_ListaPrecioCliente_Detalle.sql" />
+    <Content Include="Resources\Query\SP_FOLIOS.sql" />
     <Content Include="Resources\Query\SP_REPORTE.sql" />
     <Content Include="Resources\Query\proc_transac.sql" />
-    <Content Include="Resources\Query\TransactionNotice\bpvs_PD_TN_OP_OrdenVenta_17.sql" />
-    <Content Include="Resources\Query\TransactionNotice\bpvs_PD_TransactNotification.sql" />
-    <Content Include="Resources\Query\TransactionNotice\bpvs_PD_TN_OP_OrdenTraslado_RTR3.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\0. CrossCutting\CrossCutting\Exxis.Addon.HojadeRutaAGuia.CrossCutting.csproj">
@@ -432,6 +417,7 @@
     <Folder Include="Reports\imgs\" />
     <Folder Include="Resources\DLL\" />
     <Folder Include="Resources\Email\" />
+    <Folder Include="Resources\Query\TransactionNotice\" />
     <Folder Include="Views\SystemViews\" />
   </ItemGroup>
   <ItemGroup>

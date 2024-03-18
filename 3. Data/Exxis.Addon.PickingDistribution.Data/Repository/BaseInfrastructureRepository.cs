@@ -14,9 +14,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Repository
         {
         }
 
-        public abstract IEnumerable<OMTT> RetrieveReasons();
-
-        public abstract OMTT RetrieveDisapprovalReasonByCode(string code);
+  
 
         public abstract string RetrieveDescriptionOfValidValueCode(string field, string code);
 
@@ -49,10 +47,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Repository
 
         public abstract IEnumerable<Tuple<string, string>> RetrieveLineDocumentFields();
 
-        public abstract IEnumerable<Tuple<string, string>> RetrieveLineLiquidationCardsFields();
-
-        public abstract IEnumerable<OEIT> RetrieveMappingValuesByTemplate(string templateCode);
-
+     
         public abstract string RetrieveLastNumberBySerie(string serie, string tipo);
 
         public abstract List<Tuple<string, string>> RetriveMotiveTransferSoraya();

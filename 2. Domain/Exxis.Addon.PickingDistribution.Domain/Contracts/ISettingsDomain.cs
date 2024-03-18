@@ -5,8 +5,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain.Contracts
 {
     public interface ISettingsDomain : IBaseDomain
     {
-        void ChangeClosingState();
-        void ChangeClosingStateAddon();
+ 
         OPDS ClosingHour { get; }
         OPDS ClosingState { get; }
         OPDS AverageWeight { get; }

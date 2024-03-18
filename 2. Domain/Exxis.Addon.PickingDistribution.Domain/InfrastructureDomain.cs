@@ -20,69 +20,20 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain
         {
         }
 
-        public IEnumerable<OMTT> RetrieveApprovalReasons()
-        {
-            return RetrieveReasons().Where(t => t.Type == OMTT.Types.APPROVED);
-        }
 
-        public IEnumerable<OMTT> RetrieveDisapprovalReasons()
-        {
-            return RetrieveReasons().Where(t => t.Type == OMTT.Types.DISAPPROVED);
-        }
-
-        public IEnumerable<OMTT> RetrieveReasons()
-        {
-            return UnitOfWork.InfrastructureRepository.RetrieveReasons();
-        }
-
-        public OMTT RetrieveDisapprovalReasonByCode(string code)
-        {
-            return UnitOfWork.InfrastructureRepository.RetrieveDisapprovalReasonByCode(code);
-        }
-
-        public ODSP RetrieveLoadPriorityByLoadType(string loadType)
-        {
-            return UnitOfWork.LoadChargePriorityRepository.RetrieveAll().Single(t => t.ItemLoadType == loadType);
-        }
 
         public string RetrieveDescriptionOfValidValueCode(string field, string code)
         {
             return UnitOfWork.InfrastructureRepository.RetrieveDescriptionOfValidValueCode(field, code);
         }
 
-        public string RetrieveNextDistributionStatus(string code)
-        {
-            BaseOTDIRepository mappingRepository = UnitOfWork.MappingTableRepository;
-            return mappingRepository.MappingValue(OTMI.EntityType.DOCUMENT_DISTRIBUTION_FLOW_STATUS)
-                .Single(item => item.OriginValue == code)
-                .TargetValue;
-        }
-
-        public string RetrieveOppositeDistributionStatus(string code)
-        {
-            BaseOTDIRepository mappingRepository = UnitOfWork.MappingTableRepository;
-            return mappingRepository.MappingValue(OTMI.EntityType.DOCUMENT_DISTRIBUTION_STATUS)
-                .Single(item => item.OriginValue == code)
-                .TargetValue;
-        }
-
-        public string RetrieveOppositeDistributionTransferOrderStatus(string code)
-        {
-            return UnitOfWork.MappingTableRepository.MappingValue(OTMI.EntityType.TRANSFER_ORDER_STATUS)
-                .Single(item => item.OriginValue == code)
-                .TargetValue;
-        }
+  
 
         public IEnumerable<Tuple<string, string>> RetrieveSaleChannels()
         {
             return UnitOfWork.InfrastructureRepository.RetrieveSaleChannels();
         }
 
-        public IEnumerable<OTMI> RetrieveSAPDocumentMappingStatus()
-        {
-            return UnitOfWork.MappingTableRepository
-                .MappingValue(OTMI.EntityType.SAP_DOCUMENT_STATUS);
-        }
 
         public CrossCutting.Model.System.Header.OCRD RetrieveBusinessPartner(string cardCode)
         {
@@ -91,24 +42,13 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain
             return businessPartnerRepository.FindByCode(cardCode);
         }
 
-        public IEnumerable<OTMT> RetrievePenaltyMotives()
-        {
-            return UnitOfWork.TariffMotiveRepository.Retrieve(t => t.Type == MotiveType.PENALTY_CODE);
-        }
 
-        public IEnumerable<OTMT> RetrieveExtraMotives()
-        {
-            return UnitOfWork.TariffMotiveRepository.Retrieve(t => t.Type == MotiveType.EXTRA_CODE);
-        }
 
         public IEnumerable<Tuple<string, string>> RetrieveValidValues<TEntity, TKProperty>(Expression<Func<TEntity, TKProperty>> propertyExpression)
             where TEntity : BaseUDO
         {
             return UnitOfWork.InfrastructureRepository.RetrieveValidValues(propertyExpression);
         }
-
-        public IEnumerable<OEIT> RetrieveMappingValuesByTemplate(string templateCode)
-            => UnitOfWork.InfrastructureRepository.RetrieveMappingValuesByTemplate(templateCode);
 
         public string RetrieveLastNumberBySerie(string Serie, string tipo)
         {

@@ -96,16 +96,11 @@
     <Compile Include="Code\BaseDomain.cs" />
     <Compile Include="Code\IBaseDomain.cs" />
     <Compile Include="Contracts\IBatchDomain.cs" />
-    <Compile Include="Contracts\IEDIDomain.cs" />
     <Compile Include="Contracts\IItemDomain.cs" />
     <Compile Include="Contracts\ILiquidacionTarjetasDomain.cs" />
-    <Compile Include="Contracts\ILiquidationTransporterDomain.cs" />
     <Compile Include="Contracts\IPurchaseOrderDomain.cs" />
-    <Compile Include="Contracts\IReportDomain.cs" />
     <Compile Include="Contracts\IReturnOrderDomain.cs" />
     <Compile Include="Contracts\ITransferStockDomain.cs" />
-    <Compile Include="EDIDomain.cs" />
-    <Compile Include="EDIProcessor\ExcelEDIProcessor.cs" />
     <Compile Include="EDIStrategy\BaseEDIStrategy.cs" />
     <Compile Include="EDIStrategy\ExcelEDIStrategy.cs" />
     <Compile Include="EDIStrategy\Structures\RegisterResume.cs" />
@@ -114,21 +109,17 @@
     <Compile Include="Extractor\QueryParameter.cs" />
     <Compile Include="ItemDomain.cs" />
     <Compile Include="LiquidacionTarjetasDomain.cs" />
-    <Compile Include="LiquidationTransporterDomain.cs" />
     <Compile Include="PurchaseOrderDomain.cs" />
-    <Compile Include="ReportDomain.cs" />
     <Compile Include="ReturnOrderDomain.cs" />
     <Compile Include="Contracts\IAuxiliaryDomain.cs" />
     <Compile Include="Contracts\IDirectionsDomain.cs" />
     <Compile Include="Contracts\IDocumentMarketingDomain.cs" />
-    <Compile Include="Contracts\IFileDomain.cs" />
     <Compile Include="Contracts\IInfrastructureDomain.cs" />
     <Compile Include="Contracts\IMarketingDocumentDomain.cs" />
     <Compile Include="Contracts\ISaleOrderDomain.cs" />
     <Compile Include="Contracts\ISettingsDomain.cs" />
     <Compile Include="Contracts\IWarehouseDomain.cs" />
     <Compile Include="DirectionsDomain.cs" />
-    <Compile Include="FilesDomain.cs" />
     <Compile Include="InfrastructureDomain.cs" />
     <Compile Include="MarketingDocumentDomain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -150,7 +141,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="EDIProcessor\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

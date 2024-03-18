@@ -12,16 +12,14 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data
     public class UnitOfWork
     {
         private BaseOITMRepository _itemsRepository;
-        private BaseOTDIRepository _mappingTableRepository;
+
         private BaseOADMRepository _administratorRepository;
         private BaseOWHSRepository _warehouseRepository;
         private BaseBusinessPartnerRepository _businessPartnerRepository;
         private BaseOFTPRepository _filesRepository;
         private BaseOFUPRepository _filesUpRepository;
-        private BaseOARDRepository _routeRepository;
-        private BaseORTRRepository _transferOrderRepository;
-        private BaseCounterRepository _counterRepository;
-        private BaseTransporterLiquidateRepository _transporterLiquidateRepository;
+
+
         private BaseMessageRepository _messageRepository;
         private BaseOCSTRepository _departamentsRepository;
         private BaseLiquidacionTarjetasRepository _liquidacionTarjetasRepository;
@@ -34,8 +32,6 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data
             _company = company;
             _companyUI = companyUI;
         }
-
-        public BaseTariffMotiveRepository TariffMotiveRepository => new TariffMotiveRepository(_company);
 
         public BaseSAPDocumentRepository<ORDR, RDR1> SaleOrderRepository => new ORDRDocumentRepository(_company);
 
@@ -65,40 +61,25 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data
 
         public BaseOPDSRepository SettingsRepository => new OPDSRepository(_company);
 
-        public BaseORTRRepository TransferOrderRepository
-            => _transferOrderRepository ?? (_transferOrderRepository = new ORTRRepository(_company));
 
-        public BaseTariffRepository TariffRepository => new TariffRepository(_company);
 
-        public BaseODSPRepository LoadChargePriorityRepository => new ODSPRepository(_company);
 
         public BaseInfrastructureRepository InfrastructureRepository => new InfrastructureRepository(_company);
 
-        public BaseOTRDRepository TransporterRepository => new OTRDRepository(_company);
+
 
         public BaseEmployeeRepository EmployeeRepository => new EmployeeRepository(_company);
 
-        public BaseDriverRepository DriverRepository => new DriverRepository(_company);
-
-        public BaseVehicleRepository VehicleRepository => new VehicleRepository(_company);
-
-        public BaseDistributionHistoryRepository DistributionHistoryRepository => new DistributionHistoryRepository(_company);
-
-        public BaseCertificateAssignmentRepository CertificateAssignmentRepository => new CertificateAssignmentRepository(_company);
-
+  
         public BaseTransferItemRepository TransferItemRepository => new TransferItemRepository(_company);
 
-        public BaseTransporterLiquidateRepository TransporterLiquidateRepository
-            => _transporterLiquidateRepository ?? (_transporterLiquidateRepository = new TransporterLiquidateRepository(_company));
 
-        public BaseOARDRepository RouteRepository
-            => _routeRepository ?? (_routeRepository = new OARDRepository(_company));
+
 
         public BaseOWHSRepository WarehouseRepository
             => _warehouseRepository ?? (_warehouseRepository = new OWHSRepository(_company));
 
-        public BaseOTDIRepository MappingTableRepository
-            => _mappingTableRepository ?? (_mappingTableRepository = new OTDIRepository(_company));
+
 
         public BaseOADMRepository AdministratorRepository
             => _administratorRepository ?? (_administratorRepository = new OADMRepository(_company));
@@ -115,8 +96,6 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data
         public BaseBusinessPartnerRepository BusinessPartnerRepository
             => _businessPartnerRepository ?? (_businessPartnerRepository = new BusinessPartnerRepository(_company));
 
-        public BaseCounterRepository CounterRepository
-            => _counterRepository ?? (_counterRepository = new CounterRepository(_company));
 
         public BaseMessageRepository MessageRepository
             => _messageRepository ?? (_messageRepository = new MessageRepository(_company));

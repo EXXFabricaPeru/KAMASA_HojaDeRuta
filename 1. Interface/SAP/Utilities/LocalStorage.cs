@@ -15,11 +15,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Utilities
     {
         public static string FRM_DET_ORTR_TRANSFER_ORDER_ID { get; set; }
 
-        public static ORTR STORAGE_TRANSFER_ORDER_VALIDATION { get; set; }
 
-        public static ORTR FORM_TRANSFER_ORDER_OPENING { get; set; }
-
-        public static Tuple<ORTR, int> FORM_TRANSFER_ORDER_UPDATING { get; set; }
 
         public static Tuple<int, int> STORE_DOCUMENT_VALIDATING { get; set; }
         public static Tuple<int, string> STORE_DOCUMENT_VALIDATING_STATUS { get; set; }

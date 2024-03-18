@@ -14,55 +14,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain
         {
         }
 
-        public void ChangeClosingState()
-        {
-            OPDS closingState = ClosingState;
-            OPDS closingHour = ClosingHour;
-
-            OTMI mapValue = UnitOfWork
-                .MappingTableRepository
-                .MappingValue(OTMI.EntityType.DOCUMENT_CLOSING_HOUR)
-                .First(item => item.OriginValue == closingState.Value);
-
-            string tiempoString = closingHour.Value;
-            string formato = "HH:mm";
-
-            DateTime tiempo = DateTime.ParseExact(tiempoString, formato, null);
-
-            //Se ejecuta en la hora de cierre+
-            if (DateTime.Now.Hour == tiempo.Hour && DateTime.Now.Minute >= tiempo.Minute && closingState.Value == "Si")
-            {
-                closingState.Value = mapValue.TargetValue;
-                UnitOfWork.SettingsRepository.Update(closingState);
-            }
-
-            
-            //Se ejecuta en la madrugada
-            if (DateTime.Now.Hour < tiempo.Hour)
-            {
-                closingState.Value = "No";//mapValue.TargetValue;
-                UnitOfWork.SettingsRepository.Update(closingState);
-            }
-
-                        
-
-
-
-        }
-
-        public void ChangeClosingStateAddon()
-        {
-            OPDS closingState = ClosingState;
-            OPDS closingHour = ClosingHour;
-
-            OTMI mapValue = UnitOfWork
-                .MappingTableRepository
-                .MappingValue(OTMI.EntityType.DOCUMENT_CLOSING_HOUR)
-                .First(item => item.OriginValue == closingState.Value);
-            closingState.Value = mapValue.TargetValue;
-            UnitOfWork.SettingsRepository.Update(closingState);
-
-        }
+      
 
         public OPDS RestAPIPath
             => UnitOfWork.SettingsRepository.Setting(OPDS.Codes.REST_API_PATH);

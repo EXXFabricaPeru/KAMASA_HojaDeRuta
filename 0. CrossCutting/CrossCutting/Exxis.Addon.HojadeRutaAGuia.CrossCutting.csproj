@@ -110,18 +110,8 @@
     <Compile Include="Constant\ReportType.cs" />
     <Compile Include="Constant\SAPCodeType.cs" />
     <Compile Include="Constant\TransporterTariffRateType.cs" />
-    <Compile Include="Model\ApiResponse\RouteBuildResponse.cs" />
-    <Compile Include="Model\Localization\Header\BPP_CONDUC.cs" />
-    <Compile Include="Model\Localization\Header\VS_PD_MOTR.cs" />
-    <Compile Include="Model\Localization\Header\BPP_VEHICU.cs" />
     <Compile Include="Model\Local\BatchAssignation.cs" />
     <Compile Include="Model\Local\Item.cs" />
-    <Compile Include="Model\Local\ListaSAPPlantilla.cs" />
-    <Compile Include="Model\Report\CertificadoCalidadModel.cs" />
-    <Compile Include="Model\Report\ControlCargaModel.cs" />
-    <Compile Include="Model\Report\GuiaRemisionModel.cs" />
-    <Compile Include="Model\Report\LiquidationRouteModel.cs" />
-    <Compile Include="Model\Report\PickingSheet.cs" />
     <Compile Include="Model\ServiceLayer\Detail\JournalEntryLineSL.cs" />
     <Compile Include="Model\ServiceLayer\Detail\LiquidationLineSL.cs" />
     <Compile Include="Model\ServiceLayer\Detail\ReconciliationLinesSL.cs" />
@@ -168,72 +158,22 @@
     <Compile Include="Model\System\Header\OWTQ.cs" />
     <Compile Include="Model\System\Header\ORDR_.cs" />
     <Compile Include="Model\System\Header\OWHS.cs" />
-    <Compile Include="Model\UDO\Detail\ACD1.cs" />
-    <Compile Include="Model\UDO\Detail\ARD1.cs" />
-    <Compile Include="Model\UDO\Detail\ARD2.cs" />
-    <Compile Include="Model\UDO\Detail\ARD3.cs" />
-    <Compile Include="Model\UDO\Detail\ARD4.cs" />
-    <Compile Include="Model\UDO\Detail\ATP1.cs" />
-    <Compile Include="Model\UDO\Detail\ATP2.cs" />
-    <Compile Include="Model\UDO\Detail\DCR1.cs" />
     <Compile Include="Model\UDO\Detail\FTP1.cs" />
     <Compile Include="Model\UDO\Detail\FTP2.cs" />
     <Compile Include="Model\UDO\Detail\HOJ1.cs" />
     <Compile Include="Model\UDO\Detail\HGR1.cs" />
-    <Compile Include="Model\UDO\Detail\LDP1.cs" />
-    <Compile Include="Model\UDO\Detail\LDP2.cs" />
     <Compile Include="Model\UDO\Detail\LTR1.cs" />
     <Compile Include="Model\UDO\Detail\PCG1.cs" />
     <Compile Include="Model\UDO\Detail\PCG2.cs" />
-    <Compile Include="Model\UDO\Detail\RTU1.cs" />
     <Compile Include="Model\UDO\Detail\FUP1.cs" />
-    <Compile Include="Model\UDO\Detail\HDM1.cs" />
-    <Compile Include="Model\UDO\Detail\MPR1.cs" />
-    <Compile Include="Model\UDO\Detail\PDG1.cs" />
-    <Compile Include="Model\UDO\Detail\REN1.cs" />
-    <Compile Include="Model\UDO\Detail\RTR1.cs" />
-    <Compile Include="Model\UDO\Detail\RTR2.cs" />
-    <Compile Include="Model\UDO\Detail\RTR3.cs" />
-    <Compile Include="Model\UDO\Detail\TRD1.cs" />
-    <Compile Include="Model\UDO\Detail\TRD2.cs" />
-    <Compile Include="Model\UDO\Detail\VHR1.cs" />
-    <Compile Include="Model\UDO\Header\OACD.cs" />
-    <Compile Include="Model\UDO\Header\OARP.cs" />
-    <Compile Include="Model\UDO\Header\OARD.cs" />
-    <Compile Include="Model\UDO\Header\OATP.cs" />
     <Compile Include="Model\UDO\Header\OCEM.cs" />
-    <Compile Include="Model\UDO\Header\OCHA.cs" />
-    <Compile Include="Model\UDO\Header\OCRD.cs" />
-    <Compile Include="Model\UDO\Header\OCVL.cs" />
-    <Compile Include="Model\UDO\Header\ODCR.cs" />
-    <Compile Include="Model\UDO\Header\ODSP.cs" />
-    <Compile Include="Model\UDO\Header\OEIT.cs" />
     <Compile Include="Model\UDO\Header\OFTP.cs" />
     <Compile Include="Model\UDO\Header\OHOJ.cs" />
-    <Compile Include="Model\UDO\Header\OLDP.cs" />
     <Compile Include="Model\UDO\Header\OLTR.cs" />
-    <Compile Include="Model\UDO\Header\OMAJ.cs" />
-    <Compile Include="Model\UDO\Header\OMRJ.cs" />
-    <Compile Include="Model\UDO\Header\OPAP.cs" />
     <Compile Include="Model\UDO\Header\OPCG.cs" />
-    <Compile Include="Model\UDO\Header\ORTU.cs" />
     <Compile Include="Model\UDO\Header\OFUP.cs" />
-    <Compile Include="Model\UDO\Header\OHDM.cs" />
-    <Compile Include="Model\UDO\Header\OINP.cs" />
-    <Compile Include="Model\UDO\Header\OMPR.cs" />
-    <Compile Include="Model\UDO\Header\OMTT.cs" />
-    <Compile Include="Model\UDO\Header\OPDG.cs" />
     <Compile Include="Model\UDO\Header\OPDS.cs" />
-    <Compile Include="Model\UDO\Header\OREN.cs" />
-    <Compile Include="Model\UDO\Header\ORTR.cs" />
-    <Compile Include="Model\UDO\Header\OTMI.cs" />
-    <Compile Include="Model\UDO\Header\OTMT.cs" />
-    <Compile Include="Model\UDO\Header\OTPD.cs" />
     <Compile Include="Model\UDO\Header\OHRG.cs" />
-    <Compile Include="Model\UDO\Header\OTRD.cs" />
-    <Compile Include="Model\UDO\Header\OTVH.cs" />
-    <Compile Include="Model\UDO\Header\OUSM.cs" />
-    <Compile Include="Model\UDO\Header\OVHR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ErrorMessages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -267,7 +207,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\ApiResponse\" />
+    <Folder Include="Model\Localization\Header\" />
+    <Folder Include="Model\Report\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ErrorMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

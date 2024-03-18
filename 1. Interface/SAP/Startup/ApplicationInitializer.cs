@@ -9,7 +9,7 @@ using Exxis.Addon.HojadeRutaAGuia.Interface.Startup.Versions;
 using Exxis.Addon.HojadeRutaAGuia.Interface.Utilities;
 using VSVersionControl;
 using System.Threading.Tasks;
-using Exxis.Addon.HojadeRutaAGuia.Interface.Licencia;
+
 
 namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
 {

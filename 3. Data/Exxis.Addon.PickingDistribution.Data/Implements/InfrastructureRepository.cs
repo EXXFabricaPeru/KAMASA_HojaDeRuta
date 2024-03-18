@@ -20,7 +20,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
         private const string DESCRIPTION_VALID_VALUE_QUERY =
             "select distinct DFD.\"Descr\" from \"CUFD\" UDF, \"UFD1\" DFD where UDF.\"FieldID\" = DFD.\"FieldID\" and UDF.\"TableID\" = DFD.\"TableID\" and UDF.\"AliasID\" = '{0}' and DFD.\"FldValue\" = '{1}'";
 
-        private const string DISAPPROVAL_REASONS_QUERY = "select * from	\"@VS_PD_OMTT\"";
+       
 
         private const string GET_VALID_VALUE_QUERY =
             "select \"UFD1\".\"FldValue\",\"UFD1\".\"Descr\" from \"CUFD\", \"UFD1\" where \"CUFD\".\"TableID\" = \"UFD1\".\"TableID\" and \"CUFD\".\"FieldID\" = \"UFD1\".\"FieldID\" and \"CUFD\".\"TableID\" = '{0}' and \"CUFD\".\"AliasID\" = '{1}'";
@@ -29,48 +29,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
         {
         }
 
-        public override IEnumerable<OMTT> RetrieveReasons()
-        {
-            var recordSet = (RecordsetEx)Company.GetBusinessObject(BoObjectTypes.BoRecordsetEx);
-            recordSet.DoQuery(DISAPPROVAL_REASONS_QUERY);
-            IList<OMTT> transfer = new List<OMTT>();
-            while (!recordSet.EoF)
-            {
-                var mapping = new OMTT
-                {
-                    Code = recordSet.GetColumnValue(@"Code").ToString(),
-                    Name = recordSet.GetColumnValue(@"Name").ToString(),
-                    Type = recordSet.GetColumnValue(@"U_EXK_COTP")?.ToString() ?? string.Empty
-                };
-                transfer.Add(mapping);
-                recordSet.MoveNext();
-            }
-            transfer = transfer.OrderBy(t => t.Code).ToList();
-            return transfer;
-        }
-
-        public override OMTT RetrieveDisapprovalReasonByCode(string code)
-        {
-            var recordSet = (Recordset)Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-            recordSet.DoQuery($"{DISAPPROVAL_REASONS_QUERY} where \"Code\" = '{code}'");
-            if (recordSet.RecordCount == 0)
-                throw new Exception($"El código '{code}' no esta registrado en la Configuración de Motivos.");
-
-            Fields fields = recordSet.Fields;
-            Field field = fields.Item("Code");
-            var reasonCode = field.Value.ToString();
-            field = fields.Item("Name");
-            var reasonName = field.Value.ToString();
-
-            var reason = new OMTT
-            {
-                Code = reasonCode,
-                Name = reasonName
-            };
-
-            GenericHelper.ReleaseCOMObjects(field, fields, recordSet);
-            return reason;
-        }
+     
 
         public override string RetrieveDescriptionOfValidValueCode(string field, string code)
         {
@@ -246,42 +205,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
             }
         }
 
-        public override IEnumerable<Tuple<string, string>> RetrieveLineLiquidationCardsFields()
-        {
+     
 
-
-            try
-            {
-                List<Tuple<string, string>> result = new List<Tuple<string, string>>();
-
-                foreach (var item in ListaSAPPlantilla.staticTupleList)
-                {
-                    result.Add(Tuple.Create(item.Item1, item.Item2));
-                }
-                //result.Add(Tuple.Create("U_VS_LT_NREF", "Nro. Referencia de Cobro"));
-                //result.Add(Tuple.Create("U_VS_LT_FECO", "Fecha Cobro"));
-                //result.Add(Tuple.Create("U_VS_LT_NTAR", "Nro.  de Tarjeta"));
-                //result.Add(Tuple.Create("U_VS_LT_IMTA", "Importe Cobrado Tarjeta"));
-                //result.Add(Tuple.Create("U_VS_LT_COMI", "Comisión"));
-                //result.Add(Tuple.Create("U_VS_LT_COEM", "Comisión Emisor"));
-                //result.Add(Tuple.Create("U_VS_LT_COMP", "Comisión MCPeru"));
-                //result.Add(Tuple.Create("U_VS_LT_IGVT", "IGV"));
-                //result.Add(Tuple.Create("U_VS_LT_NTPA", "Neto Parcial"));
-
-                return result;
-            }
-            finally
-            {
-                GenericHelper.ReleaseCOMObjects();
-            }
-        }
-
-        public override IEnumerable<OEIT> RetrieveMappingValuesByTemplate(string templateCode)
-        {
-            var mappingQuery = $"select * from \"@VS_PD_OEIT\" where \"U_EXK_TPCD\" = '{templateCode}'";
-            using (SafeRecordSet recordSet = Company.MakeSafeRecordSet())
-                return recordSet.RetrieveListFromQuery<OEIT>(mappingQuery);
-        }
+    
 
        
         private string build_valid_values_query<TEntity, TKProperty>(

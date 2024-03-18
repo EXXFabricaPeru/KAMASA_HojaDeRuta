@@ -5,7 +5,7 @@ using System.Diagnostics;
 //using SAPbobsCOM;
 //using SAPbouiCOM;
 using System.Threading.Tasks;
-using Exxis.Addon.HojadeRutaAGuia.Interface.Licencia;
+
 using B1SLayer;
 namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
 {

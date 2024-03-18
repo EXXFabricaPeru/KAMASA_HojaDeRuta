@@ -85,10 +85,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain
             return UnitOfWork.InvoiceRepository.UpdateCustomFieldsFromDocument(document);
         }
 
-        public Tuple<bool, string, string> RegisterDelivery(ODLN document, DocumentObjectTypeEnum obj, string FLowSource, ORDR order, bool isFR,OARD codRutaEntry ,ORTR ordenTraslado,bool serieFija = false,bool isReprocesar = false)
-        {
-            return UnitOfWork.DeliveryRepository.RegisterDocumentDelivery(document, obj, FLowSource, order,isFR, codRutaEntry, ordenTraslado,serieFija,isReprocesar);
-        }
+
 
         public Tuple<bool, string, string> RegisterDocumentReturn(ODLN document, DocumentObjectTypeEnum obj, string FLowSource)
         {
