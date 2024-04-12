@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Attributes;
-using VSVersionControl.FlagElements.Attributes;
-using VSVersionControl.FlagElements.FieldsEnums;
+using VersionDLL.FlagElements.Attributes;
+using VersionDLL.FlagElements.FieldsEnums;
 
 namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Detail
 {

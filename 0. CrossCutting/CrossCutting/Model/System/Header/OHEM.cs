@@ -1,6 +1,6 @@
 ﻿using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Attributes;
-using VSVersionControl.FlagElements.Attributes;
+using VersionDLL.FlagElements.Attributes;
 
 namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header
 {

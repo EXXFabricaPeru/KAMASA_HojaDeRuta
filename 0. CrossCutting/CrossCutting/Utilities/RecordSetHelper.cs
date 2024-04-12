@@ -5,8 +5,8 @@ using System.Reflection;
 using DisposableSAPBO.RuntimeMapper.Attributes;
 using SAPbobsCOM;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Attributes;
-using VSVersionControl.FlagElements.Attributes;
-using VSVersionControl.FlagElements.FieldsEnums;
+using VersionDLL.FlagElements.Attributes;
+using VersionDLL.FlagElements.FieldsEnums;
 
 namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities
 {

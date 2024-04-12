@@ -8,8 +8,8 @@ using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Attributes;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities;
 using Exxis.Addon.HojadeRutaAGuia.Interface.Resources.Query;
 using Exxis.Addon.HojadeRutaAGuia.Interface.Utilities;
-using VSVersionControl;
-using VSVersionControl.FlagElements.Attributes;
+using VersionDLL;
+using VersionDLL.FlagElements.Attributes;
 
 namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup.Versions
 {

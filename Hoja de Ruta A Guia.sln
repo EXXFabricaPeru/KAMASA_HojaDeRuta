@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Library", "4. Library", 
 		4. Library\CommonUtilities.dll = 4. Library\CommonUtilities.dll
 		4. Library\DisposableSAPBO.dll = 4. Library\DisposableSAPBO.dll
 		4. Library\EPPlus.dll = 4. Library\EPPlus.dll
+		4. Library\VersionDLL.dll = 4. Library\VersionDLL.dll
 		4. Library\VSVersionControl.dll = 4. Library\VSVersionControl.dll
 	EndProjectSection
 EndProject
@@ -18,6 +19,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exxis.Addon.HojadeRutaAGuia.Data", "3. Data\Exxis.Addon.PickingDistribution.Data\Exxis.Addon.HojadeRutaAGuia.Data.csproj", "{5EB4FC73-2742-48EA-8D65-240AA8DA39C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exxis.Addon.HojadeRutaAGuia.Domain", "2. Domain\Exxis.Addon.PickingDistribution.Domain\Exxis.Addon.HojadeRutaAGuia.Domain.csproj", "{313B4D61-7C1C-4AB6-9170-114DA850ED75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionDLL", "..\VersionDLL\VersionDLL\VersionDLL.csproj", "{C983B142-2268-402B-B218-BA092E45B8AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +80,18 @@ Global
 		{313B4D61-7C1C-4AB6-9170-114DA850ED75}.Release|x64.Build.0 = Release|x64
 		{313B4D61-7C1C-4AB6-9170-114DA850ED75}.Release|x86.ActiveCfg = Release|Any CPU
 		{313B4D61-7C1C-4AB6-9170-114DA850ED75}.Release|x86.Build.0 = Release|Any CPU
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Debug|x64.ActiveCfg = Debug|x64
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Debug|x64.Build.0 = Debug|x64
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Debug|x86.Build.0 = Debug|Any CPU
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Release|x64.ActiveCfg = Release|x64
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Release|x64.Build.0 = Release|x64
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Release|x86.ActiveCfg = Release|Any CPU
+		{C983B142-2268-402B-B218-BA092E45B8AF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

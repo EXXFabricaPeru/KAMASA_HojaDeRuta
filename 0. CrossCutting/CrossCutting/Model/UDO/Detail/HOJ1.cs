@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VSVersionControl.FlagElements.Attributes;
-using VSVersionControl.FlagElements.FieldsEnums;
+using VersionDLL.FlagElements.Attributes;
+using VersionDLL.FlagElements.FieldsEnums;
 
 namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Detail
 {

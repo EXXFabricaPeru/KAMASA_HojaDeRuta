@@ -13,7 +13,7 @@ using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities;
 using Exxis.Addon.HojadeRutaAGuia.Data.Code;
 using Exxis.Addon.HojadeRutaAGuia.Data.Repository;
-using VSVersionControl.FlagElements.Attributes;
+using VersionDLL.FlagElements.Attributes;
 
 
 namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements

@@ -3,7 +3,7 @@ using SAPbouiCOM.Framework;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Resources;
 using Exxis.Addon.HojadeRutaAGuia.Interface.Code.Forms;
-using VSVersionControl.FlagElements.Attributes;
+using VersionDLL.FlagElements.Attributes;
 
 namespace Exxis.Addon.HojadeRutaAGuia.Interface.Resources.Menu
 {

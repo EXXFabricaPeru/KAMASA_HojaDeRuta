@@ -5,8 +5,8 @@ using System.Reflection;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Attributes;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Constant;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities;
-using VSVersionControl.FlagElements.Attributes;
-using VSVersionControl.FlagElements.FieldsEnums;
+using VersionDLL.FlagElements.Attributes;
+using VersionDLL.FlagElements.FieldsEnums;
 
 namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Models
 {

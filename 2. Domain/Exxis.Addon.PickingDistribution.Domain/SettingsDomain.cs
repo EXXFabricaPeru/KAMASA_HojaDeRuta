@@ -109,5 +109,9 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain
         public OPDS PassDB
            => UnitOfWork.SettingsRepository.Setting(OPDS.Codes.DBPASS);
 
+        public void ValidData()
+        {
+            UnitOfWork.SettingsRepository.ValidData();
+        }
     }
 }

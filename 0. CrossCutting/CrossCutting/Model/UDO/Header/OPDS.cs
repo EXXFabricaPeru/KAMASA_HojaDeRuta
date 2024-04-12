@@ -7,17 +7,17 @@
 using System;
 using DisposableSAPBO.RuntimeMapper.Attributes;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code;
-using VSVersionControl.FlagElements.Attributes;
-using VSVersionControl.FlagElements.FieldsEnums;
+using VersionDLL.FlagElements.Attributes;
+using VersionDLL.FlagElements.FieldsEnums;
 
 namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header
 {
-    [Serializable]
+    //[Serializable]
     [Udo(ID, SAPbobsCOM.BoUDOObjType.boud_MasterData, Description = DESCRIPTION)]
-    [UDOServices(FindServices.DefinedFields, CanDelete = true)]
-    [DefaultForm(SAPbobsCOM.BoYesNoEnum.tYES)]
+    //[UDOServices(FindServices.DefinedFields, CanDelete = true)]
+    //[DefaultForm(SAPbobsCOM.BoYesNoEnum.tYES)]
     [UserDefinedTable(ID, DESCRIPTION)]
-    public class OPDS : BaseUDO
+    public class OPDS : BaseSAPTable
     {
         public const string ID = "EXX_HOAS_OPDS";
         public const string DESCRIPTION = "Configuración";

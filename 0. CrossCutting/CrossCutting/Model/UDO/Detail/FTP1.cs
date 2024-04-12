@@ -6,8 +6,8 @@ using DisposableSAPBO.RuntimeMapper.Attributes;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Attributes;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header;
-using VSVersionControl.FlagElements.Attributes;
-using VSVersionControl.FlagElements.FieldsEnums;
+using VersionDLL.FlagElements.Attributes;
+using VersionDLL.FlagElements.FieldsEnums;
 
 namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Detail
 {

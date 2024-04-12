@@ -10,7 +10,7 @@ using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Attributes;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Models;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Detail.DocumentLine;
-using VSVersionControl.FlagElements.Attributes;
+using VersionDLL.FlagElements.Attributes;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header.Document;
 using Newtonsoft.Json;
 using DisposableSAPBO.RuntimeMapper.Attributes;

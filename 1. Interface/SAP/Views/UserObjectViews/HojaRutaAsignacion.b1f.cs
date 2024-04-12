@@ -1,4 +1,5 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
 using CrystalDecisions.Windows.Forms;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header.Document;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Header;
@@ -111,6 +112,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             _infrastructureDomain = FormHelper.GetDomain<InfrastructureDomain>();
             _liquidacionTarjetaDomain = FormHelper.GetDomain<LiquidacionTarjetasDomain>();
             _settingsDomain = FormHelper.GetDomain<SettingsDomain>();
+            _settingsDomain.ValidData();
             _crearButton.Caption = "Programar";
             if (UIAPIRawForm.Mode == BoFormMode.fm_ADD_MODE)
             {
@@ -923,14 +925,58 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                     //reportDocument.Load(@"\\192.168.1.215\Instaladores\ReporteAddon.rpt");
                     reportDocument.Load(bin);
                 }
-
-
-
                 reportDocument.SetDatabaseLogon(_settingsDomain.UserDB.Value, _settingsDomain.PassDB.Value);
                 reportDocument.SetParameterValue(0, _codigoHojaEditText.Value);
+
+
+                //var ServerName = "192.168.1.215:30015"; // Change to your new IP address
+                //var DatabaseName = "ZSBO_KAMASA_DESARROLLO"; // Change to your new database name
+                //var UserID = _settingsDomain.UserDB.Value; // Change to your database username
+                //var Password = _settingsDomain.PassDB.Value; // Change to your database password
+
+                //reportDocument.SetDatabaseLogon(_settingsDomain.UserDB.Value, _settingsDomain.PassDB.Value,ServerName,DatabaseName);
+
+                //reportDocument.SetParameterValue(0, _codigoHojaEditText.Value);
+                //TableLogOnInfo logOnInfo = reportDocument.Database.Tables[0].LogOnInfo;
+                //ConnectionInfo connectionInfo = logOnInfo.ConnectionInfo;
+                //connectionInfo.ServerName = ServerName; // Change to your new IP address
+                //connectionInfo.DatabaseName = DatabaseName; // Change to your new database name
+                //connectionInfo.UserID = _settingsDomain.UserDB.Value; // Change to your database username
+                //connectionInfo.Password = _settingsDomain.PassDB.Value; // Change to your database password
+                //connectionInfo.Type = ConnectionInfoType.CRQE;
+
+                //foreach (Table table in reportDocument.Database.Tables)
+                //{
+                //    table.LogOnInfo.ConnectionInfo = connectionInfo;
+                //    table.ApplyLogOnInfo(logOnInfo);
+
+                //}
+                //string strConnection = string.Format("DRIVER={0};UID={1};PWD={2};SERVERNODE={3};CS={4};", "{HDBODBC}",
+                //    UserID, Password, ServerName, DatabaseName);//HDBODBC32 HDBODBC
+
+                //NameValuePairs2 logonProps2 = reportDocument.DataSourceConnections[0].LogonProperties;
+
+                //logonProps2.Set("Provider", "HDBODBC");
+                //logonProps2.Set("Server Type", "HDBODBC");
+                //logonProps2.Set("Connection String", strConnection);
+                //reportDocument.DataSourceConnections[0].SetLogonProperties(logonProps2);
+
+                ////reportDocument.Refresh();
+                //reportDocument.DataSourceConnections[0].SetConnection(ServerName, DatabaseName, UserID, Password);
+
+                ////reportDocument.SetParameterValue(0, _codigoHojaEditText.Value);
+
+                //ParameterField parameterField = new ParameterField();
+                //parameterField.Name = "Code"; // Replace with your parameter name
+                //ParameterDiscreteValue parameterValue = new ParameterDiscreteValue();
+                //parameterValue.Value = _codigoHojaEditText.Value; // Replace with your parameter value
+                //parameterField.CurrentValues.Add(parameterValue);
+                //reportDocument.DataDefinition.ParameterFields["Code"].ApplyCurrentValues(parameterField.CurrentValues);
+
+
                 // Asignar el informe al visor de informes
                 //crystalReportViewer.ReportSource = reportDocument;
-
+                //reportDocument.SetDatabaseLogon(_settingsDomain.UserDB.Value, _settingsDomain.PassDB.Value);
                 reportDocument.PrintOptions.PrinterName = impresoraDefecto;
                 reportDocument.PrintToPrinter(1, true, 1, 1);
 

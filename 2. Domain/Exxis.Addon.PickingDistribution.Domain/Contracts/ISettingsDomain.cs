@@ -44,5 +44,6 @@ namespace Exxis.Addon.HojadeRutaAGuia.Domain.Contracts
         OPDS UserDB { get; }
         OPDS PassDB { get; }
 
+        void ValidData();
     }
 }

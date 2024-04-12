@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using VSVersionControl.FlagElements.Attributes;
+using VersionDLL.FlagElements.Attributes;
 
 namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code
 {

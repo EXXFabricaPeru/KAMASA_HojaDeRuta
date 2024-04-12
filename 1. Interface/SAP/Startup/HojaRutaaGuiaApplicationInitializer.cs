@@ -18,11 +18,11 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup
         protected override void BuildApplicationVersion(VersionCollection versionCollection)
         {
             versionCollection.Add(Version_0_0_0_1.Make);
-            versionCollection.Add(Version_0_0_0_2.Make);
+            //versionCollection.Add(Version_0_0_0_2.Make);
             versionCollection.Add(Version_0_0_0_3.Make);
             versionCollection.Add(Version_0_0_0_4.Make);
-            versionCollection.Add(Version_0_0_0_5.Make);
-            versionCollection.Add(Version_0_0_0_6.Make);
+            //versionCollection.Add(Version_0_0_0_5.Make);
+            //versionCollection.Add(Version_0_0_0_6.Make);
             versionCollection.Add(Version_0_0_0_7.Make);
 
         }

@@ -7,7 +7,7 @@ using DisposableSAPBO.RuntimeMapper.Attributes;
 using SAPbobsCOM;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Attributes;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities;
-using VSVersionControl.FlagElements.Attributes;
+using VersionDLL.FlagElements.Attributes;
 using Newtonsoft.Json;
 
 namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code

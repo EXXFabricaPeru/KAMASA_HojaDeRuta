@@ -13,5 +13,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Repository
         public abstract OPDS Update(OPDS setting);
 
         public abstract OPDS Setting(string id);
+
+        public abstract void ValidData();
     }
 }

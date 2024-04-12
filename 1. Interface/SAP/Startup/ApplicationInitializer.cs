@@ -7,7 +7,7 @@ using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities;
 using Exxis.Addon.HojadeRutaAGuia.Interface.Resources.Menu;
 using Exxis.Addon.HojadeRutaAGuia.Interface.Startup.Versions;
 using Exxis.Addon.HojadeRutaAGuia.Interface.Utilities;
-using VSVersionControl;
+using VersionDLL;
 using System.Threading.Tasks;
 
 

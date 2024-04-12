@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code;
-using VSVersionControl.FlagElements.Attributes;
+using VersionDLL.FlagElements.Attributes;
 
 namespace Exxis.Addon.HojadeRutaAGuia.Data.Code
 {

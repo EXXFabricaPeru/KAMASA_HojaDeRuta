@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Attributes;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Code.Models;
-using VSVersionControl.FlagElements.Attributes;
+using VersionDLL.FlagElements.Attributes;
 
 namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Detail
 {

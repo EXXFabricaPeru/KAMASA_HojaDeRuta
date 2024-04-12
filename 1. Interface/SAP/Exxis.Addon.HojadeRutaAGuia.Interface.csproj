@@ -291,10 +291,6 @@
       <HintPath>..\..\packages\ToString.Fody.1.10.1\lib\net452\ToString.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="VSVersionControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\4. Library\VSVersionControl.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="Z.ExtensionMethods, Version=2.1.1.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Z.ExtensionMethods.2.1.1\lib\net45\Z.ExtensionMethods.dll</HintPath>
@@ -382,6 +378,10 @@
     <Content Include="Resources\Query\proc_transac.sql" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\VersionDLL\VersionDLL\VersionDLL.csproj">
+      <Project>{c983b142-2268-402b-b218-ba092e45b8af}</Project>
+      <Name>VersionDLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\0. CrossCutting\CrossCutting\Exxis.Addon.HojadeRutaAGuia.CrossCutting.csproj">
       <Project>{c6f15ddb-3fd5-41b3-b266-e2c7321a1f06}</Project>
       <Name>Exxis.Addon.HojadeRutaAGuia.CrossCutting</Name>
@@ -397,6 +397,7 @@
     <None Include="Reports\ReporteAsignacionRuta.rpt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\Data\Configuracion.csv" />
     <None Include="Views\UserObjectViews\HojaRutaAsignacion.b1f">
       <FormCategory>UDOForm</FormCategory>
     </None>

@@ -80,8 +80,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="VSVersionControl">
-      <HintPath>..\..\4. Library\VSVersionControl.dll</HintPath>
+    <Reference Include="VersionDLL">
+      <HintPath>..\..\4. Library\VersionDLL.dll</HintPath>
     </Reference>
     <Reference Include="Z.ExtensionMethods, Version=2.1.1.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Z.ExtensionMethods.2.1.1\lib\net45\Z.ExtensionMethods.dll</HintPath>

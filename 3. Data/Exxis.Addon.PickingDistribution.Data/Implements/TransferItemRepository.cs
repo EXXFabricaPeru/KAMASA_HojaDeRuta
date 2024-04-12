@@ -11,7 +11,7 @@ using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Detail;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.System.Header;
 using Exxis.Addon.HojadeRutaAGuia.CrossCutting.Utilities;
 using Exxis.Addon.HojadeRutaAGuia.Data.Repository;
-using VSVersionControl.FlagElements.Attributes;
+using VersionDLL.FlagElements.Attributes;
 
 namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
 {

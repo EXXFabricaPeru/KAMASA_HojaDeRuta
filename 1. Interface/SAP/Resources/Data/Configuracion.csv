@@ -1,0 +1,5 @@
+Code,Name,U_EXX_HOAS_CTIP,U_EXX_HOAS_CVAL
+COMPARTIDO,compartido hoja de ruta,ST,C:\Compartida
+DBPASS, Contraseña  de Base de datos,ST,Passw0rd
+DBUSER, Usuario de Base de datos,ST,SAPINST
+SERVER,server de la bd,ST,192.168.1.215:30015

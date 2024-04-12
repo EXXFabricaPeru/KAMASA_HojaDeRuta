@@ -18,7 +18,11 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Startup.Versions
 
         protected override void InitializeTables()
         {
-           
+            CreateObject(typeof(OHRG));
+
+            //var root = "Resources/Data/";
+
+            //CurrentFlag.UDOs.Data.PutCabData<OPDS>(root + "Configuracion.csv");
 
         }
         protected override void InitializeFormattedSearch()
