@@ -331,7 +331,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             {
                 UIAPIRawForm.Freeze(false);
             }
-       
+
 
         }
 
@@ -359,7 +359,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
 
         private void _crearButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-           
+
 
         }
 
@@ -367,7 +367,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
         {
             try
             {
-              
+
                 List<detailGrilla> list = new List<detailGrilla>();
 
                 for (int i = 1; i <= _guiaMatrix.RowCount; i++)
@@ -441,7 +441,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             {
                 UIAPIRawForm.Freeze(false);
             }
- 
+
 
         }
 
@@ -487,11 +487,33 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                 ODLN datosguia = new ODLN();
                 datosguia.CodigoTransportista = _transportistaEditText.Value;
                 var transportista = _infrastructureDomain.RetrieveBusinessPartner(_transportistaEditText.Value);
+                if (transportista == null)
+                {
+                    throw new Exception("No existe el transportista registrado");
+                }
                 datosguia.NombreTransportista = transportista.CardName;
                 datosguia.RucTransportista = transportista.LicTradNum;
+
+                if (transportista .Addresses==null)
+                {
+                    throw new Exception("No existe direcciones registradas en el transportista");
+                }
+                if (transportista.Addresses.Count==0)
+                {
+                    throw new Exception("No existe direcciones registradas en el transportista");
+                }
                 datosguia.DireccionTransportista = transportista.Addresses.FirstOrDefault().Street;
                 datosguia.TipoOperacion = "01";
                 datosguia.MotivoTraslado = "01";
+                if (transportista.Contact == null)
+                {
+                    throw new Exception("No existe choferes(contacto) registrados en el transportista");
+                }
+                if (transportista.Contact.Count == 0)
+                {
+                    throw new Exception("No existe choferes(contacto) registrados en el transportista");
+                }
+
                 datosguia.LicenciaConductor = transportista.Contact.Where(t => t.ID == _choferEditText.Value).FirstOrDefault().Licencia;
                 datosguia.NombreConductor = _choferEditText.Value;
                 datosguia.FechaInicioTraslado = _inicioTrasladoRutaEditText.GetDateTimeValue();
@@ -594,7 +616,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                         var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(i).Specific).Value;
                         _liquidacionTarjetaDomain.ActualizarProgramado(numeracion, "N", datosguia);
                     }
-                    else 
+                    else
                     {
                         line.seleccionar = ((SAPbouiCOM.CheckBox)_guiaMatrix.Columns.Item(ColumnaSeleccionar).Cells.Item(i).Specific).Checked;
                         line.docEntry = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaDocEntry).Cells.Item(i).Specific).Value;
@@ -1124,7 +1146,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
 
         private void Form_DataAddAfter(ref BusinessObjectInfo pVal)
         {
-          
+
 
         }
 
@@ -1132,7 +1154,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
         {
             BubbleEvent = true;
 
-           
+
         }
 
         private Button _cancelarButton;
@@ -1147,10 +1169,10 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
                     {
                         for (int i = 1; i <= _guiaMatrix.RowCount; i++)
                         {
-                            
+
                             //((SAPbouiCOM.ComboBox)_guiaMatrix.Columns.Item(5).Cells.Item(i).Specific).SelectByValue("N");
                             var numeracion = ((SAPbouiCOM.EditText)_guiaMatrix.Columns.Item(ColumnaNumeroGuia).Cells.Item(i).Specific).Value;
-                            var validacion= _liquidacionTarjetaDomain.ValidarSunat(numeracion);
+                            var validacion = _liquidacionTarjetaDomain.ValidarSunat(numeracion);
                             if (validacion.Item1)
                             {
                                 throw new Exception("No se puede cancelar si ya hay guías validadas por SUNAT");
