@@ -87,6 +87,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             this._impresionComboButton.ComboSelectAfter += new SAPbouiCOM._IButtonComboEvents_ComboSelectAfterEventHandler(this._impresionComboButton_ComboSelectAfter);
             this._cancelarButton = ((SAPbouiCOM.Button)(this.GetItem("Item_11").Specific));
             this._cancelarButton.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this._cancelarButton_ClickAfter);
+            this.dbsEXD_OCBN = this.UIAPIRawForm.DataSources.DBDataSources.Item("@EX_HR_OHGR");
             this.OnCustomInitialize();
 
         }
@@ -102,6 +103,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             this.DataAddBefore += new DataAddBeforeHandler(this.Form_DataAddBefore);
 
         }
+
 
         private SAPbouiCOM.Button _desprogramarButton;
 
@@ -222,10 +224,13 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
         {
             ChooseFromListBuilder.Reference(editText, chooseFromList)
             .SetAlias("Code")
-            //.AppendCondition(@"U_EXK_STAD", SAPbouiCOM.BoConditionOperation.co_EQUAL, OARD.Status.IN_PROGRESS)
+            //.AppendCondition(@"U_EXK_EST", SAPbouiCOM.BoConditionOperation.co_EQUAL, "T",BoConditionRelationship.cr_OR)
+            //.AppendCondition(@"U_EXK_EST", SAPbouiCOM.BoConditionOperation.co_EQUAL, "O")
             //.ReferenceConditions()
             .AppendAfterAction(afterAction)
             .AppendBeforeFunction(beforeFunction);
+
+            
         }
 
         private SAPbouiCOM.Button _terminarProButton;
@@ -1143,13 +1148,27 @@ namespace Exxis.Addon.HojadeRutaAGuia.Interface.Views.UserObjectViews
             }
 
         }
-
+        private SAPbouiCOM.DBDataSource dbsEXD_OCBN = null;
         private void Form_DataAddAfter(ref BusinessObjectInfo pVal)
         {
-
+            SetValueExt(dbsEXD_OCBN, "U_EXK_DESDE", DateTime.Today.ToString("yyyyMMdd"));
+            SetValueExt(dbsEXD_OCBN, "U_EXK_HASTA", DateTime.Today.ToString("yyyyMMdd"));
+            SetValueExt(dbsEXD_OCBN, "Code", _liquidacionTarjetaDomain.RetrieveCodigoGenerado());
+          
+            //dbsEXD_OCBN.SetValueExt("U_FECHA_DESDE", DateTime.Today.ToString("yyyyMMdd"));
+            // dbsEXD_OCBN.SetValueExt("U_FECHA_HASTA", DateTime.Today.ToString("yyyyMMdd"));
+            // dbsEXD_OCBN.SetValueExt("U_FECHA_CONT", DateTime.Today.ToString("yyyyMMdd"));
 
         }
-
+        public DBDataSource SetValueExt(DBDataSource dbs, object index, string newValue, int recordNumber = 0)
+        {
+            dbs.SetValue(index, recordNumber, newValue);
+            return dbs;
+        }
+        public string GetValueExt(DBDataSource dBDataSource, object index, int recNum = 0)
+        {
+            return dBDataSource.GetValue(index, recNum);
+        }
         private void Form_DataAddBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
