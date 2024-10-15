@@ -678,6 +678,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                     Guias.Peso = recordSet.GetColumnValue("U_EXX_FE_GRPESOTOTAL").ToString();
                     Guias.CantidadBultos = (recordSet.GetColumnValue("U_EXK_CANTBULTO") == null) ? 0 : recordSet.GetColumnValue("U_EXK_CANTBULTO").ToInt32();
                     Guias.Programado = recordSet.GetColumnValue("U_EXK_HRPROG").ToString();
+                    Guias.CardName = recordSet.GetColumnValue("CardName").ToString();
                     var valAgencia = recordSet.GetColumnValue("U_EXK_AGENCOD") != null ? recordSet.GetColumnValue("U_EXK_AGENCOD").ToString() : "";
 
                     var dept = "";
@@ -707,7 +708,7 @@ namespace Exxis.Addon.HojadeRutaAGuia.Data.Implements
                     listaGuias.Add(Guias);
                     recordSet.MoveNext();
                 }
-
+                listaGuias = listaGuias.OrderBy(t => t.NumberAtCard).ToList();
                 return Tuple.Create(true, listaGuias);
             }
 

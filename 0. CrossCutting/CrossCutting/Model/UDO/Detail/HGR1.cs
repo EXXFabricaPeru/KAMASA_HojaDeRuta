@@ -56,5 +56,8 @@ namespace Exxis.Addon.HojadeRutaAGuia.CrossCutting.Model.UDO.Detail
         [EnhancedColumn(9), FieldNoRelated("U_EXK_DOCE", "DocEntry", BoDbTypes.Alpha, Size = 50)]
         public int DocEntry { get; set; }
 
+        [EnhancedColumn(10), FieldNoRelated("U_EXK_RASO", "Razón Social", BoDbTypes.Alpha, Size = 254)]
+        public string RazonSocial { get; set; }
+
     }
 }
